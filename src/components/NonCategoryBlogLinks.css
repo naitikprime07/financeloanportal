@@ -1,0 +1,210 @@
+/* "More Loan Guides" Section - Clean Layout */
+
+.non-category-blog-nav {
+  margin: 40px 0 48px;
+  padding: 0;
+  background: transparent;
+}
+
+/* Heading */
+.non-category-blog-heading {
+  margin: 0 0 28px;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #1a1a1a;
+  text-align: left;
+  letter-spacing: -0.5px;
+}
+
+/* Card Grid */
+.non-category-blog-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0;
+}
+
+/* Individual Blog Card */
+.non-category-blog-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+/* Hover state */
+@media (hover: hover) and (pointer: fine) {
+  .non-category-blog-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .non-category-blog-card:hover img {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+}
+
+/* Card active state */
+.non-category-blog-card:active {
+  transform: translateY(-2px) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* Image - button images */
+.non-category-blog-card img {
+  width: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+/* Hide text elements - only showing button images */
+.non-category-blog-card > span,
+.non-category-blog-card strong,
+.non-category-blog-card small {
+  display: none;
+}
+
+/* Responsive Breakpoints */
+
+/* Tablets */
+@media (max-width: 1100px) {
+  .non-category-blog-nav {
+    padding: 0;
+  }
+
+  .non-category-blog-heading {
+    font-size: 26px;
+    margin-bottom: 24px;
+  }
+
+  .non-category-blog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Small tablets & large phones */
+@media (max-width: 700px) {
+  .non-category-blog-nav {
+    margin: 32px 0 40px;
+    padding: 0;
+  }
+
+  .non-category-blog-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .non-category-blog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 0;
+  }
+
+  .non-category-blog-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 420px) {
+  .non-category-blog-nav {
+    margin: 24px 0 32px;
+    padding: 0;
+  }
+
+  .non-category-blog-heading {
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .non-category-blog-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 0;
+  }
+
+  .non-category-blog-card {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .non-category-blog-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+  }
+
+  .non-category-blog-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Keep the supplied loan-button artwork compact on mobile. */
+@media (max-width: 560px) {
+  .non-category-blog-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .non-category-blog-card {
+    width: min(76%, 238px);
+    margin-inline: auto;
+  }
+
+  .non-category-blog-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+/* Enhanced focus state for accessibility */
+.non-category-blog-card:focus-visible {
+  outline: 3px solid #0066cc;
+  outline-offset: 4px;
+}
+
+/* Smooth animation for loading */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.non-category-blog-card {
+  animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.non-category-blog-card:nth-child(1) { animation-delay: 0.05s; }
+.non-category-blog-card:nth-child(2) { animation-delay: 0.1s; }
+.non-category-blog-card:nth-child(3) { animation-delay: 0.15s; }
+.non-category-blog-card:nth-child(4) { animation-delay: 0.2s; }
+.non-category-blog-card:nth-child(5) { animation-delay: 0.25s; }
+.non-category-blog-card:nth-child(6) { animation-delay: 0.3s; }
+
+.non-category-blog-card.is-disabled {
+  opacity: .58;
+  cursor: wait;
+  pointer-events: none;
+}
+
+.non-category-blog-card.is-active {
+  opacity: .72;
+  transform: translateY(-2px) scale(.98);
+}
+
+.non-category-blog-card[aria-busy="true"] img {
+  filter: saturate(.75);
+}

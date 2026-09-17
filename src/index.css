@@ -1,0 +1,222 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #0066cc;
+  --secondary-color: #1a73e8;
+  --text-dark: #1a1a1a;
+  --text-light: #666;
+  --text-gray: #888;
+  --bg-light: #f5f7fa;
+  --bg-white: #ffffff;
+  --border-color: #e0e0e0;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-dark);
+  background-color: var(--bg-light);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+.main-content {
+  min-width: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.top-ad-rail,
+.bottom-ad-rail {
+  width: 100%;
+  overflow: visible;
+  background: #f7f8fa;
+}
+
+.top-ad-inner {
+  width: min(100%, 1010px);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.top-ad-rail .ad-unit-wrapper {
+  margin: 8px 0 0;
+}
+
+.bottom-ad-rail .ad-unit-wrapper {
+  margin: 16px 0 24px;
+}
+
+/* Make footer ad full width on mobile */
+@media (max-width: 768px) {
+  .bottom-ad-rail {
+    padding: 0;
+  }
+
+  .bottom-ad-rail .container {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .bottom-ad-rail .ad-unit-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin: 12px 0 20px;
+  }
+
+  .bottom-ad-rail .ad-unit {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .bottom-ad-rail .ad-unit-wrapper {
+    margin: 10px 0 16px;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 20px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.section {
+  padding: 60px 0;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 18px;
+  color: var(--text-light);
+}
+
+/* Error State */
+.error {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .section {
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  .section {
+    padding: 32px 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
+.desktop-side-ad {
+  position: fixed;
+  top: var(--side-ad-top, 96px);
+  z-index: 40;
+  width: 160px;
+  min-height: 18px;
+}
+
+.desktop-side-ad.is-footer-blocked {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.desktop-side-ad .ad-unit-wrapper {
+  margin: 0;
+}
+
+.desktop-side-ad-left {
+  left: max(16px, calc(50vw - 816px));
+}
+
+.desktop-side-ad-right {
+  right: max(16px, calc(50vw - 816px));
+}
+
+@media (min-width: 1536px) {
+  .main-content {
+    padding-inline: 192px;
+  }
+}
+
+@media (max-width: 1535px) {
+  .desktop-side-ad {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-ad-inner {
+    padding: 0 8px;
+  }
+
+  .top-ad-rail .ad-unit-wrapper {
+    margin-top: 4px;
+  }
+}

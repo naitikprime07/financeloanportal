@@ -1,0 +1,355 @@
+/*
+ * FloatingExpandableAd - Premium Publisher Style
+ * Behaves like floating billboard ads on NYTimes, WSJ, CNN
+ * - Overlays content (doesn't push layout)
+ * - Fixed positioning
+ * - Smooth expand/collapse
+ * - Shows minimal fallback when ad fails
+ */
+
+/* Fallback-Only Display (when ad fails to load) */
+.floating-ad-fallback-only {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.floating-ad-fallback-only span {
+  display: block;
+  color: #999;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Main Container - Fixed Overlay */
+.floating-expandable-ad {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  width: 100%;
+  max-width: 970px;
+  background: #ffffff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+  transition: all 0.35s ease;
+  overflow: hidden;
+}
+
+.floating-ad-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Advertisement Label */
+.floating-ad-label {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #999;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+/* Ad Content Area */
+.floating-ad-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+.floating-ad-content .ad-unit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.floating-ad-content .ad-unit > div,
+.floating-ad-content .ad-unit iframe {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Collapse/Expand Toggle Button */
+.floating-ad-toggle {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 32px;
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 10;
+  padding: 0;
+  outline: none;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+.floating-ad-toggle:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%) scale(1.05);
+}
+
+.floating-ad-toggle:active {
+  background: #e8e8e8;
+  transform: translateX(-50%) scale(0.95);
+}
+
+.floating-ad-toggle .toggle-icon {
+  transition: transform 0.35s ease;
+  color: #666;
+}
+
+/* Expanded State */
+.floating-expandable-ad.expanded {
+  height: var(--desktop-height, 250px);
+}
+
+.floating-expandable-ad.expanded .floating-ad-container {
+  padding: 8px 8px 24px 8px;
+}
+
+.floating-expandable-ad.expanded .floating-ad-content {
+  opacity: 1;
+  max-height: calc(var(--desktop-height, 250px) - 50px);
+}
+
+.floating-expandable-ad.expanded .floating-ad-toggle .toggle-icon {
+  transform: rotate(0deg);
+}
+
+/* Collapsed State */
+.floating-expandable-ad.collapsed {
+  height: var(--collapsed-height, 50px);
+  max-width: 100%;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.floating-expandable-ad.collapsed .floating-ad-container {
+  padding: 6px 8px 20px 8px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.floating-expandable-ad.collapsed .floating-ad-label {
+  position: static;
+  transform: none;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  opacity: 0.5;
+  margin-left: 12px;
+}
+
+.floating-expandable-ad.collapsed .floating-ad-content {
+  opacity: 0;
+  max-height: 0;
+  margin-top: 0;
+  pointer-events: none;
+  transform: scale(0.2);
+}
+
+.floating-expandable-ad.collapsed .floating-ad-toggle .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Loading State */
+.floating-expandable-ad.ad-state-loading .floating-ad-content {
+  min-height: 50px;
+  background: transparent;
+}
+
+/* Empty State - Still show container with fallback */
+.floating-expandable-ad.ad-state-empty .floating-ad-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.floating-expandable-ad.ad-state-empty .floating-ad-content::before {
+  content: 'ADVERTISEMENT';
+}
+
+/* Ensure no horizontal scroll */
+.floating-expandable-ad,
+.floating-ad-container,
+.floating-ad-content {
+  overflow-x: hidden;
+}
+
+/* Accessibility */
+.floating-ad-toggle:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .floating-expandable-ad.expanded {
+    height: var(--desktop-height, 250px);
+    max-width: 970px;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .floating-expandable-ad {
+    max-width: 728px;
+  }
+
+  .floating-expandable-ad.expanded {
+    height: 90px;
+  }
+
+  .floating-expandable-ad.expanded .floating-ad-content {
+    max-height: 70px;
+  }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+  .floating-expandable-ad {
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .floating-expandable-ad.expanded {
+    height: var(--mobile-height, 100px);
+  }
+
+  .floating-expandable-ad.expanded .floating-ad-content {
+    max-height: calc(var(--mobile-height, 100px) - 40px);
+  }
+
+  .floating-expandable-ad.collapsed {
+    border-radius: 0;
+  }
+
+  .floating-ad-container {
+    padding: 4px;
+  }
+
+  .floating-expandable-ad.expanded .floating-ad-container {
+    padding: 4px 4px 20px 4px;
+  }
+
+  .floating-expandable-ad.collapsed .floating-ad-container {
+    padding: 4px 8px 16px 8px;
+  }
+
+  .floating-ad-label {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  .floating-ad-content {
+    margin-top: 16px;
+  }
+
+  .floating-ad-toggle {
+    width: 36px;
+    height: 28px;
+    bottom: -14px;
+  }
+
+  .floating-ad-toggle .toggle-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Extra Small Mobile (up to 374px) */
+@media (max-width: 374px) {
+  .floating-expandable-ad.expanded {
+    height: calc(var(--mobile-height, 100px) * 0.9);
+  }
+
+  .floating-ad-label {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+}
+
+/* Print: Hide floating ad */
+@media print {
+  .floating-expandable-ad {
+    display: none !important;
+  }
+}
+
+/* Smooth entrance animation on page load */
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.floating-expandable-ad.ad-state-filled {
+  animation: slideDown 0.5s ease-out;
+}
+
+/* Prevent text selection on toggle button */
+.floating-ad-toggle {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Ensure button is always accessible */
+.floating-ad-toggle {
+  pointer-events: auto !important;
+}

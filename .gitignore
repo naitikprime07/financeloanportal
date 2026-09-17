@@ -1,0 +1,19 @@
+# Dependencies are installed by npm/Vercel for the target operating system.
+node_modules/
+
+# Vite output and caches
+dist/
+.vite/
+
+# Local environment files (keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+
+# Logs and editor/OS files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.vercel/

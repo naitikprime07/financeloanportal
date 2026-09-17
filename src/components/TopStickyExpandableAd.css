@@ -1,0 +1,309 @@
+/* Top Sticky Expandable Ad Container */
+.top-sticky-expandable-ad {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 100%;
+  max-width: 100vw;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.top-sticky-ad-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Ad Label */
+.top-sticky-ad-label {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aeb5c5;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+/* Ad Content */
+.top-sticky-ad-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 16px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.top-sticky-ad-content .ad-unit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.top-sticky-ad-content .ad-unit > div,
+.top-sticky-ad-content .ad-unit iframe {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Toggle Button */
+.top-sticky-ad-toggle {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 24px;
+  background: #ffffff;
+  border: 1px solid #e3e6ec;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  padding: 0;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-sticky-ad-toggle:hover {
+  background: #f8f9fa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.top-sticky-ad-toggle:active {
+  background: #e9ecef;
+  transform: translateX(-50%) scale(0.95);
+}
+
+.top-sticky-ad-toggle .toggle-icon {
+  transition: transform 0.3s ease;
+  color: #6c757d;
+}
+
+/* Expanded State */
+.top-sticky-expandable-ad.expanded {
+  height: auto;
+  min-height: 100px;
+  max-height: 280px;
+}
+
+.top-sticky-expandable-ad.expanded .top-sticky-ad-container {
+  padding: 8px 8px 32px 8px;
+}
+
+.top-sticky-expandable-ad.expanded .top-sticky-ad-content {
+  opacity: 1;
+  height: auto;
+  max-height: 250px;
+}
+
+.top-sticky-expandable-ad.expanded .top-sticky-ad-toggle .toggle-icon {
+  transform: rotate(0deg);
+}
+
+/* Minimized State */
+.top-sticky-expandable-ad.minimized {
+  height: 60px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.top-sticky-expandable-ad.minimized .top-sticky-ad-container {
+  padding: 4px 8px 24px 8px;
+}
+
+.top-sticky-expandable-ad.minimized .top-sticky-ad-label {
+  top: 2px;
+  font-size: 7px;
+}
+
+.top-sticky-expandable-ad.minimized .top-sticky-ad-content {
+  opacity: 0.3;
+  height: 30px;
+  max-height: 30px;
+  margin-top: 12px;
+  overflow: hidden;
+  transform: scale(0.3);
+  transform-origin: center top;
+}
+
+.top-sticky-expandable-ad.minimized .top-sticky-ad-toggle .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Loading State */
+.top-sticky-expandable-ad.ad-state-loading .top-sticky-ad-content {
+  min-height: 90px;
+}
+
+/* Responsive Styles */
+
+/* Desktop Large (1024px+) */
+@media (min-width: 1024px) {
+  .top-sticky-expandable-ad.expanded {
+    max-width: 1000px;
+  }
+
+  .top-sticky-expandable-ad.minimized {
+    max-width: 1000px;
+  }
+
+  .top-sticky-ad-container {
+    max-width: 1000px;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .top-sticky-expandable-ad.expanded {
+    max-width: 750px;
+    max-height: 120px;
+  }
+
+  .top-sticky-expandable-ad.minimized {
+    max-width: 750px;
+    height: 50px;
+  }
+
+  .top-sticky-ad-container {
+    max-width: 750px;
+  }
+
+  .top-sticky-ad-content {
+    max-height: 90px;
+  }
+
+  .top-sticky-expandable-ad.expanded .top-sticky-ad-content {
+    max-height: 90px;
+  }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+  .top-sticky-expandable-ad {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .top-sticky-expandable-ad.expanded {
+    max-height: 130px;
+  }
+
+  .top-sticky-expandable-ad.minimized {
+    height: 45px;
+  }
+
+  .top-sticky-ad-container {
+    padding: 4px;
+  }
+
+  .top-sticky-expandable-ad.expanded .top-sticky-ad-container {
+    padding: 4px 4px 28px 4px;
+  }
+
+  .top-sticky-expandable-ad.minimized .top-sticky-ad-container {
+    padding: 2px 4px 20px 4px;
+  }
+
+  .top-sticky-ad-label {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+
+  .top-sticky-ad-content {
+    margin-top: 12px;
+    max-height: 100px;
+  }
+
+  .top-sticky-expandable-ad.expanded .top-sticky-ad-content {
+    max-height: 100px;
+  }
+
+  .top-sticky-expandable-ad.minimized .top-sticky-ad-content {
+    height: 25px;
+    max-height: 25px;
+  }
+
+  .top-sticky-ad-toggle {
+    width: 40px;
+    height: 20px;
+  }
+
+  .top-sticky-ad-toggle .toggle-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Extra Small Mobile (up to 374px) */
+@media (max-width: 374px) {
+  .top-sticky-expandable-ad.expanded {
+    max-height: 110px;
+  }
+
+  .top-sticky-ad-content {
+    max-height: 80px;
+  }
+
+  .top-sticky-expandable-ad.expanded .top-sticky-ad-content {
+    max-height: 80px;
+  }
+
+  .top-sticky-ad-label {
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+}
+
+/* Ensure no horizontal scroll */
+.top-sticky-expandable-ad,
+.top-sticky-ad-container,
+.top-sticky-ad-content {
+  overflow-x: hidden;
+}
+
+/* Accessibility */
+.top-sticky-ad-toggle:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Print: Hide the sticky ad when printing */
+@media print {
+  .top-sticky-expandable-ad {
+    display: none !important;
+  }
+}

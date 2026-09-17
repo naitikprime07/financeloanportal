@@ -1,0 +1,22 @@
+{
+  "name": "finvexa-website",
+  "version": "1.0.0",
+  "description": "FinanceLoan - Finance News and Business Insights",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": ["finance", "crm", "business"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-helmet-async": "^3.0.0",
+    "react-router-dom": "^7.18.3",
+    "vite": "^8.2.2"
+  }
+}

@@ -1,0 +1,144 @@
+.top-floating-ad {
+  position: fixed; top: 0; left: 50%; z-index: 1200; display: flex;
+  width: min(calc(100vw - 16px), var(--top-ad-width, 970px)); min-height: 18px;
+  transform: translateX(-50%); flex-direction: column; align-items: center;
+  box-sizing: border-box; border: 1px solid rgba(209, 216, 226, .8);
+  border-radius: 0 0 8px 8px; background: #fff;
+  box-shadow: 0 5px 24px rgba(15, 23, 42, .22);
+  transition: width .34s ease, height .34s ease, box-shadow .34s ease; overflow: visible;
+}
+.top-floating-label {
+  display: grid; place-items: center; width: 100%; height: 18px; color: #aeb5c5;
+  font-size: 9px; line-height: 18px; letter-spacing: 3px;
+}
+.top-floating-creative {
+  position: relative; display: flex; width: var(--top-ad-width, auto);
+  height: var(--top-ad-height, auto); flex: 0 0 auto; justify-content: center;
+  transform-origin: top center; opacity: 1;
+  transition: width .34s ease, height .34s ease, opacity .26s ease; overflow: visible;
+}
+.top-floating-slot {
+  display: block; width: var(--top-ad-width, auto); height: var(--top-ad-height, auto);
+  flex: 0 0 auto; transform-origin: top center; transition: transform .34s ease; overflow: visible;
+}
+.top-floating-slot > div, .top-floating-slot iframe {
+  display: block; width: var(--top-ad-width, auto) !important;
+  height: var(--top-ad-height, auto) !important; min-width: 0; min-height: 0 !important;
+  max-width: none !important; max-height: none !important; margin: 0 auto; border: 0; overflow: visible;
+}
+.top-floating-toggle {
+  position: absolute; bottom: -28px; left: 50%; display: flex; min-width: 42px;
+  height: 28px; padding: 0 10px; transform: translateX(-50%); align-items: center;
+  justify-content: center; gap: 6px; border: 1px solid #d9dee8; border-top: 0;
+  border-radius: 0 0 12px 12px; background: #fff; color: #536174;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, .14); font-size: 10px;
+  font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.top-floating-toggle svg {
+  width: 12px; height: 12px; fill: none; stroke: currentColor;
+  stroke-width: 2; transition: transform .3s ease;
+}
+.top-floating-ad.is-compact {
+  width: min(100vw, var(--top-ad-compact-width, 728px));
+  height: var(--top-ad-compact-height, 90px);
+}
+.top-floating-ad.is-compact .top-floating-creative {
+  width: var(--top-ad-compact-width, auto); height: var(--top-ad-compact-height, auto);
+}
+.top-floating-ad.is-compact .top-floating-slot { transform: scale(var(--top-ad-compact-scale, 1)); }
+.top-floating-ad.is-compact .top-floating-toggle svg,
+.top-floating-ad.is-collapsed .top-floating-toggle svg { transform: rotate(180deg); }
+.top-floating-ad.is-collapsed {
+  width: 1px; height: 0; min-height: 0; border: 0; background: transparent; box-shadow: none;
+}
+.top-floating-ad.is-collapsed .top-floating-label { opacity: 0; }
+.top-floating-ad.is-collapsed .top-floating-creative {
+  position: absolute; height: 0; opacity: 0; pointer-events: none;
+}
+.top-floating-ad.is-collapsed .top-floating-toggle { top: 0; bottom: auto; min-width: 58px; }
+.top-floating-ad.is-loading, .top-floating-ad.is-unavailable {
+  width: auto; min-width: 180px; min-height: 18px; border-color: transparent;
+  background: transparent; box-shadow: none;
+}
+.top-floating-ad.is-loading .top-floating-creative,
+.top-floating-ad.is-unavailable .top-floating-creative {
+  position: absolute; width: 0; height: 0; visibility: hidden; pointer-events: none;
+}
+.top-floating-clearance {
+  height: calc(var(--top-ad-height, 0px) + 36px); transition: height .34s ease; pointer-events: none;
+}
+.top-floating-clearance.is-loading, .top-floating-clearance.is-unavailable { height: 18px; }
+.top-floating-clearance.is-compact { height: calc(var(--top-ad-compact-height, 90px) + 36px); }
+.top-floating-clearance.is-collapsed { height: 40px; }
+
+@media (max-width: 767px) {
+  /* Mobile: Only expanded and collapsed states (no compact) */
+  .top-floating-ad, .top-floating-ad.is-expanded,
+  .top-floating-ad.is-compact, .top-floating-ad.is-collapsed {
+    right: 0; left: 0; width: 100%; max-width: none; transform: none;
+    border-right: 0; border-left: 0; border-radius: 0;
+  }
+  .top-floating-ad.is-expanded {
+    height: var(--top-ad-mobile-height, auto); min-height: var(--top-ad-mobile-height, auto);
+  }
+  .top-floating-ad.is-expanded .top-floating-creative {
+    width: 100%; height: var(--top-ad-mobile-height, auto);
+  }
+  .top-floating-ad.is-expanded .top-floating-slot {
+    position: relative; top: auto; left: auto;
+    width: var(--top-ad-width, auto); height: var(--top-ad-height, auto);
+    transform: scale(var(--top-ad-mobile-scale, 1));
+    transform-origin: top center;
+  }
+  /* Mobile: Compact state should behave like expanded (fallback, shouldn't occur) */
+  .top-floating-ad.is-compact {
+    height: var(--top-ad-mobile-height, auto); min-height: var(--top-ad-mobile-height, auto);
+    background: #fff;
+  }
+  .top-floating-ad.is-compact .top-floating-creative {
+    width: 100%; height: var(--top-ad-mobile-height, auto);
+  }
+  .top-floating-ad.is-compact .top-floating-slot {
+    position: relative; top: auto; left: auto;
+    width: var(--top-ad-width, auto); height: var(--top-ad-height, auto);
+    transform: scale(var(--top-ad-mobile-scale, 1));
+    transform-origin: top center;
+  }
+  /* Mobile: Collapsed = single minimized state */
+  .top-floating-ad.is-collapsed { height: 0; }
+  .top-floating-toggle, .top-floating-ad.is-collapsed .top-floating-toggle {
+    right: auto; left: 0; width: 44px; min-width: 44px; height: 28px;
+    padding: 0; transform: none; border: 1px solid #d9dde3; border-top: 0;
+    border-radius: 0 0 10px 0; background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+    box-shadow: 0 3px 5px rgba(20, 28, 38, .18);
+  }
+  .top-floating-toggle span {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+  }
+  .top-floating-toggle svg { width: 14px; height: 14px; stroke-width: 2.1; }
+  .top-floating-clearance.is-expanded {
+    height: calc(var(--top-ad-mobile-height, 0px) + 40px);
+  }
+  .top-floating-clearance.is-compact {
+    height: calc(var(--top-ad-mobile-height, 0px) + 40px);
+  }
+  .top-floating-clearance.is-collapsed { height: 36px; }
+  .top-floating-ad.is-loading, .top-floating-ad.is-unavailable {
+    width: 100%; height: 18px; min-width: 0; min-height: 18px;
+  }
+}
+@media (max-width: 360px) {
+  .top-floating-toggle, .top-floating-ad.is-collapsed .top-floating-toggle {
+    width: 40px; min-width: 40px; height: 26px;
+  }
+  .top-floating-clearance.is-expanded {
+    height: calc(var(--top-ad-mobile-height, 0px) + 36px);
+  }
+  .top-floating-clearance.is-compact {
+    height: calc(var(--top-ad-compact-height, 72px) + 36px);
+  }
+  .top-floating-clearance.is-collapsed { height: 32px; }
+}
+@media print {
+  .top-floating-ad, .top-floating-clearance { display: none; }
+}

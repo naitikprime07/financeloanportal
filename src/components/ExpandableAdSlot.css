@@ -1,0 +1,245 @@
+/* Expandable Ad Slot Container */
+.expandable-ad-slot {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.expandable-ad-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Ad Label */
+.expandable-ad-label {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aeb5c5;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+/* Ad Content */
+.expandable-ad-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 16px;
+  overflow: hidden;
+  transition: all var(--transition-duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.expandable-ad-content .ad-unit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.expandable-ad-content .ad-unit > div,
+.expandable-ad-content .ad-unit iframe {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Fallback when ad is empty */
+.expandable-ad-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  color: #aeb5c5;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Toggle Button */
+.expandable-ad-toggle {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 24px;
+  background: #ffffff;
+  border: 1px solid #e3e6ec;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  padding: 0;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.expandable-ad-toggle:hover {
+  background: #f8f9fa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.expandable-ad-toggle:active {
+  background: #e9ecef;
+  transform: translateX(-50%) scale(0.95);
+}
+
+.expandable-ad-toggle .toggle-icon {
+  transition: transform var(--transition-duration, 400ms) ease;
+  color: #6c757d;
+}
+
+/* Expanded State */
+.expandable-ad-slot.expanded {
+  height: var(--expanded-height, 250px);
+}
+
+.expandable-ad-slot.expanded .expandable-ad-container {
+  padding: 8px 8px 32px 8px;
+}
+
+.expandable-ad-slot.expanded .expandable-ad-content {
+  opacity: 1;
+  height: auto;
+  max-height: calc(var(--expanded-height, 250px) - 50px);
+}
+
+.expandable-ad-slot.expanded .expandable-ad-toggle .toggle-icon {
+  transform: rotate(0deg);
+}
+
+/* Collapsed State */
+.expandable-ad-slot.collapsed {
+  height: var(--collapsed-height, 60px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.expandable-ad-slot.collapsed .expandable-ad-container {
+  padding: 4px 8px 24px 8px;
+}
+
+.expandable-ad-slot.collapsed .expandable-ad-label {
+  top: 2px;
+  font-size: 7px;
+}
+
+.expandable-ad-slot.collapsed .expandable-ad-content {
+  opacity: 0.3;
+  height: calc(var(--collapsed-height, 60px) - 30px);
+  max-height: calc(var(--collapsed-height, 60px) - 30px);
+  margin-top: 12px;
+  overflow: hidden;
+  transform: scale(0.3);
+  transform-origin: center top;
+}
+
+.expandable-ad-slot.collapsed .expandable-ad-toggle .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Loading State */
+.expandable-ad-slot.ad-state-loading .expandable-ad-content {
+  min-height: 50px;
+}
+
+/* Empty State - Still show container to prevent layout shift */
+.expandable-ad-slot.ad-state-empty .expandable-ad-content .ad-unit {
+  display: none;
+}
+
+/* Ensure no horizontal scroll */
+.expandable-ad-slot,
+.expandable-ad-container,
+.expandable-ad-content {
+  overflow-x: hidden;
+}
+
+/* Accessibility */
+.expandable-ad-toggle:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Responsive: Mobile */
+@media (max-width: 767px) {
+  .expandable-ad-slot.expanded {
+    height: var(--expanded-height-mobile, var(--expanded-height, 100px));
+  }
+
+  .expandable-ad-slot.collapsed {
+    height: var(--collapsed-height-mobile, var(--collapsed-height, 50px));
+  }
+
+  .expandable-ad-container {
+    padding: 4px;
+  }
+
+  .expandable-ad-slot.expanded .expandable-ad-container {
+    padding: 4px 4px 28px 4px;
+  }
+
+  .expandable-ad-slot.collapsed .expandable-ad-container {
+    padding: 2px 4px 20px 4px;
+  }
+
+  .expandable-ad-label {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+
+  .expandable-ad-content {
+    margin-top: 12px;
+  }
+
+  .expandable-ad-toggle {
+    width: 40px;
+    height: 20px;
+  }
+
+  .expandable-ad-toggle .toggle-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Print: Hide expandable ads when printing */
+@media print {
+  .expandable-ad-slot {
+    display: none !important;
+  }
+}

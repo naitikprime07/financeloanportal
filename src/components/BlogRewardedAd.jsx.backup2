@@ -1,0 +1,166 @@
+import { useEffect, useRef, useState } from 'react';
+import { gamLog, gamWarn } from './gamDebug';
+import './BlogRewardedAd.css';
+
+const NETWORK = String(import.meta.env.VITE_GAM_NETWORK_CODE || '').trim().replace(/^\/+|\/+$/g, '');
+const normalizePath = (value) => {
+  const path = String(value || '').trim();
+  if (!path) return '';
+  if (path.startsWith('/')) return path;
+  return NETWORK ? `/${NETWORK}/${path.replace(/^\/+/, '')}` : '';
+};
+
+const REWARDED_PATH = normalizePath(
+  import.meta.env.VITE_GAM_AD_UNIT_REWARDED || import.meta.env.VITE_GAM_AD_UNIT_CONTENT_TOP,
+);
+
+const BlogRewardedAd = ({ post }) => {
+  const [status, setStatus] = useState('idle');
+  const slotRef = useRef(null);
+  const showRewardedRef = useRef(null);
+  const scrollPositionRef = useRef(0);
+
+  useEffect(() => {
+    if (!REWARDED_PATH) {
+      setStatus('failed');
+      gamWarn('blog-rewarded-not-configured', {
+        variables: ['VITE_GAM_AD_UNIT_REWARDED', 'VITE_GAM_AD_UNIT_CONTENT_TOP'],
+      });
+      return undefined;
+    }
+
+    setStatus('loading');
+
+    window.googletag = window.googletag || { cmd: [] };
+    let active = true;
+    let timeoutId;
+    const owns = (event) => event.slot === slotRef.current;
+
+    const startRequestTimeout = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        if (!active || !slotRef.current) return;
+        showRewardedRef.current = null;
+        setStatus('failed');
+        window.googletag?.destroySlots?.([slotRef.current]);
+        slotRef.current = null;
+        gamWarn('blog-rewarded-timeout', { path: REWARDED_PATH, timeoutMs: 30000 });
+      }, 30000);
+    };
+
+    const handlers = {
+      slotRequested: (event) => {
+        if (!active || !owns(event)) return;
+        startRequestTimeout();
+        gamLog('blog-rewarded-requested', { path: REWARDED_PATH });
+      },
+      slotRenderEnded: (event) => {
+        if (!active || !owns(event)) return;
+        if (event.isEmpty) {
+          window.clearTimeout(timeoutId);
+          setStatus('failed');
+          showRewardedRef.current = null;
+          window.googletag?.destroySlots?.([slotRef.current]);
+          slotRef.current = null;
+          gamLog('blog-rewarded-no-fill', { path: REWARDED_PATH });
+        }
+      },
+      rewardedSlotReady: (event) => {
+        if (!active || !owns(event)) return;
+        window.clearTimeout(timeoutId);
+        showRewardedRef.current = event.makeRewardedVisible;
+        setStatus('ready');
+        gamLog('blog-rewarded-ready', { path: REWARDED_PATH });
+      },
+      rewardedSlotGranted: (event) => {
+        if (!active || !owns(event)) return;
+        setStatus('closable');
+        gamLog('blog-rewarded-granted', { path: REWARDED_PATH, payload: event.payload });
+      },
+      rewardedSlotClosed: (event) => {
+        if (!active || !owns(event)) return;
+        showRewardedRef.current = null;
+        setStatus('closed');
+        window.requestAnimationFrame(() => window.scrollTo({ top: scrollPositionRef.current, behavior: 'instant' }));
+        gamLog('blog-rewarded-closed', { path: REWARDED_PATH });
+      },
+    };
+
+    window.googletag.cmd.push(() => {
+      if (!active) return;
+      const gt = window.googletag;
+      try {
+        const rewardedSlot = gt.defineOutOfPageSlot(REWARDED_PATH, gt.enums.OutOfPageFormat.REWARDED);
+        if (!rewardedSlot) {
+          setStatus('failed');
+          gamWarn('blog-rewarded-unsupported', { path: REWARDED_PATH });
+          return;
+        }
+
+        rewardedSlot.addService(gt.pubads());
+        slotRef.current = rewardedSlot;
+        Object.entries(handlers).forEach(([eventName, handler]) => gt.pubads().addEventListener(eventName, handler));
+        gt.display(rewardedSlot);
+      } catch (error) {
+        setStatus('failed');
+        gamWarn('blog-rewarded-exception', { message: error instanceof Error ? error.message : String(error) });
+      }
+    });
+
+    return () => {
+      active = false;
+      window.clearTimeout(timeoutId);
+      showRewardedRef.current = null;
+      window.googletag?.cmd?.push(() => {
+        Object.entries(handlers).forEach(([eventName, handler]) => window.googletag.pubads().removeEventListener(eventName, handler));
+        if (slotRef.current) window.googletag.destroySlots([slotRef.current]);
+        slotRef.current = null;
+      });
+    };
+  }, [post.id]);
+
+  const openRewardedAd = () => {
+    if (status !== 'ready' || !showRewardedRef.current) return;
+    scrollPositionRef.current = window.scrollY;
+    setStatus('opened');
+    try {
+      showRewardedRef.current();
+      setStatus('showing');
+    } catch (error) {
+      showRewardedRef.current = null;
+      setStatus('failed');
+      gamWarn('blog-rewarded-open-failed', { message: error instanceof Error ? error.message : String(error) });
+    }
+  };
+
+  if (status === 'failed') {
+    return <aside className="blog-rewarded-fallback" aria-label="Advertisement">ADVERTISEMENT</aside>;
+  }
+
+  return (
+    <aside className={`blog-rewarded-card is-${status}`} aria-label="Rewarded advertisement">
+      <div className="blog-rewarded-copy">
+        <span>Sponsored content</span>
+        <h3>Continue with a short sponsored break</h3>
+        <p>View the available advertisement, then return to this exact point and continue reading.</p>
+      </div>
+      <figure className="blog-rewarded-poster">
+        <img src={post.image} alt={`${post.title} offer`} loading="lazy" />
+      </figure>
+      <div className="blog-rewarded-action">
+        <button type="button" onClick={openRewardedAd} disabled={status !== 'ready'}>
+          {status === 'idle' && 'Continue Reading →'}
+          {status === 'loading' && 'Preparing AdvertisementÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦'}
+          {status === 'ready' && 'Continue Reading →'}
+          {(status === 'opened' || status === 'showing') && 'Advertisement ShowingÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦'}
+          {status === 'closable' && 'Complete Ad to Continue'}
+          {status === 'closed' && 'Advertisement Completed'}
+        </button>
+        <div className="blog-rewarded-caption"><span>SPONSORED BREAK</span></div>
+      </div>
+    </aside>
+  );
+};
+
+export default BlogRewardedAd;
+
