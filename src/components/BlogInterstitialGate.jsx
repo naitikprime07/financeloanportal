@@ -1,6 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { gamLog, gamWarn } from './gamDebug';
+import {
+  isRewardCompletedForPageSession,
+  subscribeToPageSessionReward,
+} from '../utils/rewardSessionState';
 
 const TARGET_ID = 'blog-continue-reading-target';
 const NETWORK = String(import.meta.env.VITE_GAM_NETWORK_CODE || '').trim().replace(/^\/+|\/+$/g, '');
@@ -13,17 +17,27 @@ const INTERSTITIAL_PATH = rawPath.startsWith('/')
 
 const BlogInterstitialGate = () => {
   const { pathname } = useLocation();
+  const hostname = window.location.hostname.toLowerCase().replace(/\.$/, '');
+  const [rewardCompleted, setRewardCompleted] = useState(() =>
+    isRewardCompletedForPageSession(hostname),
+  );
+
+  useEffect(
+    () => subscribeToPageSessionReward((completedHost) => {
+      if (completedHost === hostname) setRewardCompleted(true);
+    }),
+    [hostname],
+  );
 
   useEffect(() => {
     if (!pathname.startsWith('/blog/')) return undefined;
 
-    const hostname = window.location.hostname.toLowerCase().replace(/\.$/, '');
     const isEligibleSubdomain =
       hostname.endsWith('.financeloanportal.com') &&
       hostname !== 'www.financeloanportal.com';
     if (
       isEligibleSubdomain &&
-      localStorage.getItem(`blogRewardCompleted:${hostname}`) !== 'true'
+      !rewardCompleted
     ) {
       gamLog('interstitial-deferred-for-first-visit', { hostname, pathname });
       return undefined;
@@ -110,7 +124,7 @@ const BlogInterstitialGate = () => {
         destroyInterstitial();
       });
     };
-  }, [pathname]);
+  }, [pathname, hostname, rewardCompleted]);
 
   return null;
 };

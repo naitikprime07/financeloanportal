@@ -21,11 +21,13 @@ const Layout = () => {
       <AdScriptLoader />
       <BlogInterstitialGate />
       <Header />
-      <section className="header-ad-section" aria-label="Top advertisement">
-        <div className="container">
-          <AdUnit key={`header-${location.pathname}`} slot="MIDDLE_1" size="square" />
-        </div>
-      </section>
+      {location.pathname === "/" && (
+        <section className="header-ad-section" aria-label="Top advertisement">
+          <div className="container">
+            <AdUnit key="home-header-square" slot="MIDDLE_1" size="square" />
+          </div>
+        </section>
+      )}
       <main className="main-content">
         <Outlet key={location.pathname} />
       </main>
