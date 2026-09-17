@@ -11,9 +11,21 @@ import LanguageToggle from "../components/LanguageToggle";
 
 import NonCategoryBlogLinks from "../components/NonCategoryBlogLinks";
 
-import { getBlogPost, blogPosts, getBlogLanguage, getBlogTopicKey } from "../data/blogData";
-import { isBlogAvailableForLanguage, orderBlogsByPriority } from "../data/blogData";
-import { getCurrentSiteLanguage, getPriorityBlog, getCanonicalUrl } from "../config/siteConfig";
+import {
+  getBlogPost,
+  blogPosts,
+  getBlogLanguage,
+  getBlogTopicKey,
+} from "../data/blogData";
+import {
+  isBlogAvailableForLanguage,
+  orderBlogsByPriority,
+} from "../data/blogData";
+import {
+  getCurrentSiteLanguage,
+  getPriorityBlog,
+  getCanonicalUrl,
+} from "../config/siteConfig";
 import { BLOG_VIEW_EVENT_NAME, useBlogViewTracking } from "../tracking";
 import "./BlogDetail.css";
 const HINDI_LOAN_CTA_TEXTS = [
@@ -123,13 +135,12 @@ const BlogDetail = () => {
   const requestedPost = getBlogPost(slug);
   const siteLanguage = getCurrentSiteLanguage();
   const post =
-    requestedPost &&
-    isBlogAvailableForLanguage(requestedPost, siteLanguage)
+    requestedPost && isBlogAvailableForLanguage(requestedPost, siteLanguage)
       ? requestedPost
       : null;
   const middlePosterRef = useRef(null);
-  const [loanCtaOffset] = useState(
-    () => Math.floor(Math.random() * HINDI_LOAN_CTA_TEXTS.length),
+  const [loanCtaOffset] = useState(() =>
+    Math.floor(Math.random() * HINDI_LOAN_CTA_TEXTS.length),
   );
   useBlogViewTracking(post);
 
@@ -143,7 +154,9 @@ const BlogDetail = () => {
   const loanCtaTexts =
     siteLanguage === "en" ? ENGLISH_LOAN_CTA_TEXTS : HINDI_LOAN_CTA_TEXTS;
   const loanCtaText =
-    loanCtaTexts[(Math.max(articleIndex, 0) + loanCtaOffset) % loanCtaTexts.length];
+    loanCtaTexts[
+      (Math.max(articleIndex, 0) + loanCtaOffset) % loanCtaTexts.length
+    ];
   const rewardTargetSlug =
     siteLanguage === "en" ? ENGLISH_AADHAAR_LOAN_SLUG : AADHAAR_LOAN_SLUG;
   const aadhaarRewardTargets = sitePosts
@@ -175,9 +188,12 @@ const BlogDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{post.title} | FinanceLoan</title>
+        <title>{post.title} | FinanceLoanPortal</title>
         <meta name="description" content={post.excerpt} />
-        <meta property="og:title" content={`${post.title} | FinanceLoan`} />
+        <meta
+          property="og:title"
+          content={`${post.title} | FinanceLoanPortal`}
+        />
         <meta property="og:description" content={post.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={post.image} />
@@ -219,7 +235,14 @@ const BlogDetail = () => {
             <article className="blog-detail-content">
               <header className="blog-detail-header">
                 <BlogPixel blog={post} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "18px",
+                  }}
+                >
                   <Link
                     className="blog-category-badge"
                     to={post.category ? `/category/${post.category}` : "/"}
@@ -256,7 +279,7 @@ const BlogDetail = () => {
                 <figcaption>{post.title}</figcaption>
               </figure>
               <BlogAd
-                key={'featured-image-ad-' + post.id}
+                key={"featured-image-ad-" + post.id}
                 slot="MIDDLE_2"
                 placement="featured"
               />
@@ -308,17 +331,24 @@ const BlogDetail = () => {
                     )}
                     {index === 1 && (
                       <>
-                        <BlogBottomImage postId={post.id} imageRef={middlePosterRef} />
+                        <BlogBottomImage
+                          postId={post.id}
+                          imageRef={middlePosterRef}
+                        />
                         <BlogAd
-                          key={'poster-ad-' + post.id}
+                          key={"poster-ad-" + post.id}
                           slot="MIDDLE_2"
                           placement="poster"
                         />
                         {AADHAAR_LOAN_SLUGS.includes(post.id) ? (
                           <BlogRewardedAd
-                            key={'guide-rewarded-' + post.id}
+                            key={"guide-rewarded-" + post.id}
                             post={post}
-                            renderTrigger={({ status, activeTargetSlug, openRewardedAd }) => (
+                            renderTrigger={({
+                              status,
+                              activeTargetSlug,
+                              openRewardedAd,
+                            }) => (
                               <NonCategoryBlogLinks
                                 currentPostId={post.id}
                                 rewardStatus={status}
@@ -329,7 +359,7 @@ const BlogDetail = () => {
                           />
                         ) : (
                           <BlogRewardedAd
-                            key={'rewarded-' + post.id}
+                            key={"rewarded-" + post.id}
                             post={post}
                             targetSlug={rewardTargetSlug}
                             targetSlugs={aadhaarRewardTargets}
@@ -339,10 +369,18 @@ const BlogDetail = () => {
                       </>
                     )}
                     {index === 3 && (
-                      <BlogAd key={`${post.id}-middle-2`} slot="MIDDLE_2" placement="middle" />
+                      <BlogAd
+                        key={`${post.id}-middle-2`}
+                        slot="MIDDLE_2"
+                        placement="middle"
+                      />
                     )}
                     {index === 5 && (
-                      <BlogAd key={`${post.id}-middle-3`} slot="MIDDLE_3" placement="middle" />
+                      <BlogAd
+                        key={`${post.id}-middle-3`}
+                        slot="MIDDLE_3"
+                        placement="middle"
+                      />
                     )}
                   </section>
                 ))}
@@ -354,7 +392,7 @@ const BlogDetail = () => {
                   {post.categoryName}
                 </Link>
                 <span>Business insights</span>
-                <span>FinanceLoan guides</span>
+                <span>FinanceLoanPortal guides</span>
               </div>
               <nav
                 className="article-navigation"
@@ -384,9 +422,10 @@ const BlogDetail = () => {
                   <section>
                     <h3>Disclaimer</h3>
                     <p>
-                      FinanceLoan provides general informational and educational
-                      content. Verify important financial or business decisions
-                      with an appropriately qualified professional.
+                      FinanceLoanPortal provides general informational and
+                      educational content. Verify important financial or
+                      business decisions with an appropriately qualified
+                      professional.
                     </p>
                   </section>
                   <section>

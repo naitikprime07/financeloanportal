@@ -96,7 +96,7 @@ const RelatedDetails = () => {
   return (
     <>
       <Helmet>
-        <title>{post.title} - Apply Now | FinanceLoan</title>
+        <title>{post.title} - Apply Now | FinanceLoanPortal</title>
         <meta name="description" content={post.excerpt} />
       </Helmet>
 
@@ -141,7 +141,9 @@ const RelatedDetails = () => {
                               <div className="reward-icon">+</div>
                               <div className="reward-content">
                                 <h4 className="reward-heading">{item.title}</h4>
-                                <p className="reward-description">{item.description}</p>
+                                <p className="reward-description">
+                                  {item.description}
+                                </p>
                               </div>
                             </div>
                           ))}

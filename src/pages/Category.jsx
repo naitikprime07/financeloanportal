@@ -1,12 +1,21 @@
-import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
-import BlogCard from '../components/BlogCard';
-import Sidebar from '../components/Sidebar';
-import AdUnit from '../components/AdUnit';
-import { getBlogsByCategory, getCategoryBySlug, isBlogAvailableForLanguage, orderBlogsByPriority } from '../data/blogData';
-import { getCurrentSiteLanguage, getPriorityBlog, getCanonicalUrl } from '../config/siteConfig';
-import './Category.css';
+import { useParams } from "react-router-dom";
+import { useMemo } from "react";
+import { Helmet } from "react-helmet-async";
+import BlogCard from "../components/BlogCard";
+import Sidebar from "../components/Sidebar";
+import AdUnit from "../components/AdUnit";
+import {
+  getBlogsByCategory,
+  getCategoryBySlug,
+  isBlogAvailableForLanguage,
+  orderBlogsByPriority,
+} from "../data/blogData";
+import {
+  getCurrentSiteLanguage,
+  getPriorityBlog,
+  getCanonicalUrl,
+} from "../config/siteConfig";
+import "./Category.css";
 
 const Category = () => {
   const { categorySlug } = useParams();
@@ -27,16 +36,24 @@ const Category = () => {
   const posts = useMemo(() => {
     const siteLanguage = getCurrentSiteLanguage();
     const categoryPosts = getBlogsByCategory(category.id);
-    const languagePosts = categoryPosts.filter(post => isBlogAvailableForLanguage(post, siteLanguage));
+    const languagePosts = categoryPosts.filter((post) =>
+      isBlogAvailableForLanguage(post, siteLanguage),
+    );
     return orderBlogsByPriority(languagePosts, getPriorityBlog());
   }, [category.id]);
 
   return (
     <>
       <Helmet>
-        <title>{category.name} | FinanceLoan</title>
-        <meta name="description" content={`Explore ${category.name} articles on FinanceLoan. Latest news, insights, and expert guides.`} />
-        <link rel="canonical" href={getCanonicalUrl(`/category/${categorySlug}`)} />
+        <title>{category.name} | FinanceLoanPortal</title>
+        <meta
+          name="description"
+          content={`Explore ${category.name} articles on FinanceLoanPortal. Latest news, insights, and expert guides.`}
+        />
+        <link
+          rel="canonical"
+          href={getCanonicalUrl(`/category/${categorySlug}`)}
+        />
       </Helmet>
 
       <div className="category-page">
@@ -66,7 +83,6 @@ const Category = () => {
                   <p>No posts found in this category.</p>
                 </div>
               )}
-
             </div>
 
             <Sidebar />
@@ -75,22 +91,29 @@ const Category = () => {
           <div className="disclaimer-section">
             <h2>DISCLAIMER</h2>
             <p>
-              The information provided on FinanceLoan is for general informational and educational purposes only. It is not
-              a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other
-              qualified health provider with any questions you may have regarding a medical condition.
+              The information provided on FinanceLoanPortal is for general
+              informational and educational purposes only. It is not a
+              substitute for professional medical advice, diagnosis, or
+              treatment. Always seek the advice of your physician or other
+              qualified health provider with any questions you may have
+              regarding a medical condition.
             </p>
 
             <h2>ADVERTISER DISCLOSURE</h2>
             <p>
-              This website is supported by third-party advertising and promotional programs. Some links and rewards mentioned are
-              sponsored content from our partners. All participation in external offers is voluntary and subject to the terms of the
-              respective providers.
+              This website is supported by third-party advertising and
+              promotional programs. Some links and rewards mentioned are
+              sponsored content from our partners. All participation in external
+              offers is voluntary and subject to the terms of the respective
+              providers.
             </p>
 
             <h2>EDITORIAL NOTE</h2>
             <p>
-              While we strive to keep our health tips and blog information accurate and up-to-date, wellness trends and scientific
-              research evolve quickly. Details such as eligibility for rewards or specific health benefits should be verified with the original
+              While we strive to keep our health tips and blog information
+              accurate and up-to-date, wellness trends and scientific research
+              evolve quickly. Details such as eligibility for rewards or
+              specific health benefits should be verified with the original
               source or a certified professional.
             </p>
           </div>
@@ -101,4 +124,3 @@ const Category = () => {
 };
 
 export default Category;
-

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { getBlogPixelConfig } from "../utils/getBlogPixel";
 
-const META_SCRIPT_ID = "finvexa-meta-pixel-script";
-const CONSENT_EVENT = "finvexa:cookie-consent";
+const META_SCRIPT_ID = "financeloanportal-meta-pixel-script";
+const CONSENT_EVENT = "financeloanportal:cookie-consent";
 const initializedPixelIds = new Set();
 const recentPageViews = new Map();
 

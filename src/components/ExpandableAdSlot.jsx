@@ -42,7 +42,7 @@ const ExpandableAdSlot = ({
   className = "",
   transitionDuration = 400,
 }) => {
-  const finalStorageKey = storageKey || `finvexa-ad-${placement}-expanded`;
+  const finalStorageKey = storageKey || `financeloanportal-ad-${placement}-expanded`;
   const adPath = normalizePath(adUnitPath);
 
   // Load initial state from localStorage if enabled

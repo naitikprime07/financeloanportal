@@ -1,17 +1,17 @@
-import { Link } from 'react-router-dom';
-import mainLogo from '../assets/logo/mainLogo.png';
-import { categories } from '../data/blogData';
-import './Footer.css';
+import { Link } from "react-router-dom";
+import mainLogo from "../assets/logo/mainLogo.png";
+import { categories } from "../data/blogData";
+import "./Footer.css";
 
 const Footer = () => {
   const companyLinks = [
-    { name: 'About Us', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
   ];
 
   const legalLinks = [
-    { name: 'Terms of Service', path: '/terms' },
-    { name: 'Privacy Policy', path: '/privacy' },
+    { name: "Terms of Service", path: "/terms" },
+    { name: "Privacy Policy", path: "/privacy" },
   ];
 
   return (
@@ -20,10 +20,15 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-section footer-brand">
             <Link to="/" className="footer-logo">
-              <img className="footer-logo-image" src={mainLogo} alt="FinanceLoan" />
+              <img
+                className="footer-logo-image"
+                src={mainLogo}
+                alt="FinanceLoanPortal"
+              />
             </Link>
             <p className="footer-description">
-              Your ultimate destination for finance news, reviews, and insights. Making finance knowledge accessible for everyone.
+              Your ultimate destination for finance news, reviews, and insights.
+              Making finance knowledge accessible for everyone.
             </p>
           </div>
 
@@ -62,7 +67,10 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} FinanceLoan. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} financeloanportal.com All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>

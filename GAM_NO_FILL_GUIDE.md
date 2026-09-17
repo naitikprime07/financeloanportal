@@ -9,7 +9,7 @@
 Your logs show:
 ```
 [GAM] slot-no-fill
-{slot: 'TOP', key: 'TOP', path: '/23338698373/financeloanplatform_display_top', size: null}
+{slot: 'TOP', key: 'TOP', path: '/23338698373/financeloanportal_display_top', size: null}
 ```
 
 This means:
@@ -30,11 +30,11 @@ This means:
 1. Go to [Google Ad Manager](https://admanager.google.com/)
 2. Navigate to **Inventory** → **Ad units**
 3. Create ad units matching these paths:
-   - `/23338698373/financeloanplatform_display_top`
-   - `/23338698373/financeloanplatform_display_middle_1`
-   - `/23338698373/financeloanplatform_display_middle_2`
-   - `/23338698373/financeloanplatform_native_in_content`
-   - `/23338698373/financeloanplatform_display_bottom`
+   - `/23338698373/financeloanportal_display_top`
+   - `/23338698373/financeloanportal_display_middle_1`
+   - `/23338698373/financeloanportal_display_middle_2`
+   - `/23338698373/financeloanportal_native_in_content`
+   - `/23338698373/financeloanportal_display_bottom`
 
 ### 2. **No Line Items or Creatives**
 
@@ -143,11 +143,11 @@ I've enhanced your AdUnit component with:
 - [ ] Environment variables set in `.env`:
   ```env
   VITE_GAM_NETWORK_CODE=23338698373
-  VITE_GAM_AD_UNIT_CONTENT_TOP=financeloanplatform_display_top
-  VITE_GAM_AD_UNIT_CONTENT_MIDDLE_1=financeloanplatform_display_middle_1
-  VITE_GAM_AD_UNIT_CONTENT_MIDDLE_2=financeloanplatform_display_middle_2
-  VITE_GAM_AD_UNIT_CONTENT_BOTTOM=financeloanplatform_display_bottom
-  VITE_GAM_AD_UNIT_NATIVE_IN_CONTENT=financeloanplatform_native_in_content
+  VITE_GAM_AD_UNIT_CONTENT_TOP=financeloanportal_display_top
+  VITE_GAM_AD_UNIT_CONTENT_MIDDLE_1=financeloanportal_display_middle_1
+  VITE_GAM_AD_UNIT_CONTENT_MIDDLE_2=financeloanportal_display_middle_2
+  VITE_GAM_AD_UNIT_CONTENT_BOTTOM=financeloanportal_display_bottom
+  VITE_GAM_AD_UNIT_NATIVE_IN_CONTENT=financeloanportal_native_in_content
   VITE_GAM_DEBUG=true
   ```
 - [ ] App rebuilt after changing `.env`

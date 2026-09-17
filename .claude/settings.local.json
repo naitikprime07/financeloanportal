@@ -1,13 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find d:/finance_web/src -name \"*.css\" -exec grep -l \"language\\|lang-\\|हिंदी\" {} ;)",
-      "Bash(cat d:/finance_web/package.json)",
-      "Bash(cat d:/finance_web/vite.config.js)",
-      "Bash(find d:/finance_web/src -name \"*.css\" -exec grep -l \"hindi\\|english\\|domain\" {} ;)",
-      "Bash(cat \"d:/finance_web/src/config/siteConfig.js\")",
-      "Bash(cat \"d:/finance_web/src/pages/Home.jsx\")",
-      "Bash(grep -E \"(^\\s+id:|^\\s+\\{$)\")"
+      "Bash(npm run build)",
+      "Bash(find ./src -type f ( -name \"*.js\" -o -name \"*.jsx\" ) -exec grep -l \"financeloanplatform\\|finvexa\" {} ;)"
     ],
     "deny": [],
     "ask": []

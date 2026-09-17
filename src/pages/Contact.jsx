@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import './Contact.css';
+import { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import "./Contact.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -22,20 +22,23 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // In a real application, you would send this data to a server
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: "", email: "", subject: "", message: "" });
     }, 3000);
   };
 
   return (
     <>
       <Helmet>
-        <title>Contact Us | FinanceLoan</title>
-        <meta name="description" content="Get in touch with the FinanceLoan team. We're here to help with your questions and feedback." />
-        <link rel="canonical" href="https://finvexa.com/contact" />
+        <title>Contact Us | FinanceLoanPortal</title>
+        <meta
+          name="description"
+          content="Get in touch with the FinanceLoanPortal team. We're here to help with your questions and feedback."
+        />
+        <link rel="canonical" href="https://financeloanportal.com/contact" />
       </Helmet>
 
       <div className="contact-page">
@@ -46,8 +49,9 @@ const Contact = () => {
             <section className="contact-intro">
               <h2>Get in Touch</h2>
               <p>
-                Have questions, feedback, or suggestions? We'd love to hear from you. Fill out the form below,
-                and our team will get back to you as soon as possible.
+                Have questions, feedback, or suggestions? We'd love to hear from
+                you. Fill out the form below, and our team will get back to you
+                as soon as possible.
               </p>
             </section>
 
@@ -109,7 +113,9 @@ const Contact = () => {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="submit-btn">Send Message</button>
+                <button type="submit" className="submit-btn">
+                  Send Message
+                </button>
               </form>
             </section>
           </div>

@@ -3,7 +3,7 @@
 
 # Redirect non-www to www (if that's your preference)
 # Adjust this based on your actual domain setup
-https://financeloanplatform.com/* https://www.financeloanplatform.com/:splat 301!
+https://financeloanportal.com/* https://www.financeloanportal.com/:splat 301!
 
 # SPA fallback - serve index.html for all routes that don't match files
 # This ensures client-side routing works correctly

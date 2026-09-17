@@ -14,13 +14,13 @@ const CookieConsent = () => {
 
   const handleAccept = () => {
     localStorage.setItem('cookieConsent', 'accepted');
-    window.dispatchEvent(new CustomEvent('finvexa:cookie-consent', { detail: { status: 'accepted' } }));
+    window.dispatchEvent(new CustomEvent('financeloanportal:cookie-consent', { detail: { status: 'accepted' } }));
     setShow(false);
   };
 
   const handleReject = () => {
     localStorage.setItem('cookieConsent', 'rejected');
-    window.dispatchEvent(new CustomEvent('finvexa:cookie-consent', { detail: { status: 'rejected' } }));
+    window.dispatchEvent(new CustomEvent('financeloanportal:cookie-consent', { detail: { status: 'rejected' } }));
     setShow(false);
   };
 

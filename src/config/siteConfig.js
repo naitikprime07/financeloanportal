@@ -54,57 +54,57 @@ const addDomainConfig = (configs, domain, config = {}) => {
 };
 
 const REQUIRED_SITE_CONFIG = Object.freeze({
-  "www.financeloanplatform.com": {
+  "www.financeloanportal.com": {
     language: "hi",
     priorityBlog: "personal-loan",
     adsEnabled: true,
   },
-  "carloan-hi.financeloanplatform.com": {
+  "carloan-hi.financeloanportal.com": {
     language: "hi",
     priorityBlog: "car-loan",
     adsEnabled: true,
   },
-  "aadhaarpeloan-hi.financeloanplatform.com": {
+  "aadhaarpeloan-hi.financeloanportal.com": {
     language: "hi",
     priorityBlog: "aadhaar-loan",
     adsEnabled: true,
   },
-  "personalloan-en.financeloanplatform.com": {
+  "personalloan-en.financeloanportal.com": {
     language: "en",
     priorityBlog: "personal-loan",
     adsEnabled: true,
   },
-  "carloan-en.financeloanplatform.com": {
+  "carloan-en.financeloanportal.com": {
     language: "en",
     priorityBlog: "car-loan",
     adsEnabled: true,
   },
-  "aadhaarpeloan-en.financeloanplatform.com": {
+  "aadhaarpeloan-en.financeloanportal.com": {
     language: "en",
     priorityBlog: "aadhaar-loan",
     adsEnabled: true,
   },
-  "personalloan1-hi.financeloanplatform.com": {
+  "personalloan1-hi.financeloanportal.com": {
     language: "hi",
     priorityBlog: "personal-loan-online-apply-guide",
     adsEnabled: true,
   },
-  "personalloan1-en.financeloanplatform.com": {
+  "personalloan1-en.financeloanportal.com": {
     language: "en",
     priorityBlog: "personal-loan-online-application-guide",
     adsEnabled: true,
   },
-  "aadhaarpeloan1-hi.financeloanplatform.com": {
+  "aadhaarpeloan1-hi.financeloanportal.com": {
     language: "hi",
     priorityBlog: "aadhaarpe-loan-online-application-guide",
     adsEnabled: true,
   },
-  "aadhaarpeloan1-en.financeloanplatform.com": {
+  "aadhaarpeloan1-en.financeloanportal.com": {
     language: "en",
     priorityBlog: "aadhaarpe-loan-online-application-process-guide",
     adsEnabled: true,
   },
-  "studentloan1-hi.financeloanplatform.com": {
+  "studentloan1-hi.financeloanportal.com": {
     language: "hi",
     priorityBlog: "student-loan-online-education-finance-guide",
     adsEnabled: true,
@@ -155,10 +155,10 @@ const parseDomainConfig = () => {
 };
 
 export const MAIN_DOMAIN =
-  import.meta.env.VITE_MAIN_DOMAIN || "https://www.financeloanplatform.com";
+  import.meta.env.VITE_MAIN_DOMAIN || "https://financeloanportal.com";
 export const ENGLISH_DOMAIN =
   import.meta.env.VITE_ENGLISH_DOMAIN ||
-  "https://personalloan-en.financeloanplatform.com";
+  "https://personalloan-en.financeloanportal.com";
 export const HINDI_DOMAIN = import.meta.env.VITE_HINDI_DOMAIN || MAIN_DOMAIN;
 export const DEFAULT_LANGUAGE = import.meta.env.VITE_DEFAULT_LANGUAGE || "hi";
 

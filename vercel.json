@@ -9,10 +9,10 @@
       "has": [
         {
           "type": "host",
-          "value": "financeloanplatform.com"
+          "value": "financeloanportal.com"
         }
       ],
-      "destination": "https://www.financeloanplatform.com/$1",
+      "destination": "https://financeloanportal.com/$1",
       "permanent": true
     }
   ],

@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import './NotFound.css';
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import "./NotFound.css";
 
 const NotFound = () => {
   return (
     <>
       <Helmet>
-        <title>404 - Page Not Found | FinanceLoan</title>
+        <title>404 - Page Not Found | FinanceLoanPortal</title>
         <meta name="robots" content="noindex" />
       </Helmet>
 
@@ -16,7 +16,8 @@ const NotFound = () => {
             <h1 className="not-found-title">404</h1>
             <h2 className="not-found-subtitle">Page Not Found</h2>
             <p className="not-found-text">
-              Sorry, the page you're looking for doesn't exist or has been moved.
+              Sorry, the page you're looking for doesn't exist or has been
+              moved.
             </p>
             <Link to="/" className="home-btn">
               Go Back Home

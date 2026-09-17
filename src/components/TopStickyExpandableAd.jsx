@@ -33,7 +33,7 @@ const buildSizeMapping = (gt) => {
     .build();
 };
 
-const STORAGE_KEY = 'finvexa-top-ad-expanded';
+const STORAGE_KEY = 'financeloanportal-top-ad-expanded';
 
 const TopStickyExpandableAd = () => {
   // Load initial state from localStorage, default to true (expanded)

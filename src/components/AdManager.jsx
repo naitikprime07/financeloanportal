@@ -3,8 +3,8 @@ export const GPT_SCRIPT_URL = 'https://securepubads.g.doubleclick.net/tag/js/gpt
 export const initializeGPT = () => {
   if (typeof window === 'undefined') return;
   window.googletag = window.googletag || { cmd: [] };
-  if (window.__finvexaGptConfigured) return;
-  window.__finvexaGptConfigured = true;
+  if (window.__financeloanportalGptConfigured) return;
+  window.__financeloanportalGptConfigured = true;
 
   window.googletag.cmd.push(() => {
     const gt = window.googletag;

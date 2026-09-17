@@ -6,16 +6,16 @@ const AdScriptLoader = () => {
   useEffect(() => {
     window.googletag = window.googletag || { cmd: [] };
     initializeGPT();
-    const existing = document.querySelector(`script[data-finvexa-gpt="true"], script[src="${GPT_SCRIPT_URL}"]`);
+    const existing = document.querySelector(`script[data-financeloanportal-gpt="true"], script[src="${GPT_SCRIPT_URL}"]`);
     if (existing) {
-      existing.dataset.finvexaGpt = 'true';
+      existing.dataset.financeloanportalGpt = 'true';
       gamLog('script-already-present', { apiReady: Boolean(window.googletag.apiReady) });
       return undefined;
     }
     gamLog('script-requested', { url: GPT_SCRIPT_URL });
     const script = document.createElement('script');
     script.async = true;
-    script.dataset.finvexaGpt = 'true';
+    script.dataset.financeloanportalGpt = 'true';
     script.src = GPT_SCRIPT_URL;
     script.onload = () => gamLog('script-loaded', { apiReady: Boolean(window.googletag.apiReady) });
     script.onerror = () => {

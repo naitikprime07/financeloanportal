@@ -1,4 +1,4 @@
-# FinanceLoan Website
+# FinanceLoanPortal Website
 
 Finance news and business insights platform built with React and Vite.
 

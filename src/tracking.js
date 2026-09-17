@@ -49,7 +49,7 @@ export const trackCustomEvent = (eventName, params = {}, options = {}) => {
     window.fbq('trackSingleCustom', options.metaPixelId, eventName, eventParams);
   }
 
-  window.dispatchEvent(new CustomEvent(`finvexa:${eventName}`, { detail: eventParams }));
+  window.dispatchEvent(new CustomEvent(`financeloanportal:${eventName}`, { detail: eventParams }));
 
   if (trackingDebug) console.info('[tracking]', eventName, eventParams);
 
