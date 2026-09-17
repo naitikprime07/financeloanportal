@@ -8,6 +8,9 @@ import BlogRewardedAd from "../components/BlogRewardedAd";
 import BlogBottomImage from "../components/BlogBottomImage";
 import BlogPixel from "../components/BlogPixel";
 import LanguageToggle from "../components/LanguageToggle";
+import { useBlogNavigation } from '../hooks/useBlogNavigation';
+import GenderSelectionModal from '../components/GenderSelectionModal';
+import { BLOG_INTERSTITIAL_TARGET_ID } from '../components/BlogInterstitialGate';
 
 import NonCategoryBlogLinks from "../components/NonCategoryBlogLinks";
 
@@ -131,6 +134,7 @@ const BlogScrollPrompt = ({ section }) => {
 };
 
 const BlogDetail = () => {
+  const { navigateToBlog, isGenderModalOpen, handleGenderContinue, handleGenderModalClose } = useBlogNavigation();
   const { slug } = useParams();
   const requestedPost = getBlogPost(slug);
   const siteLanguage = getCurrentSiteLanguage();
@@ -210,6 +214,7 @@ const BlogDetail = () => {
 
       <div className="blog-detail-page">
         <div className="container">
+          <div id={BLOG_INTERSTITIAL_TARGET_ID} style={{ position: 'absolute', visibility: 'hidden' }} />
           <nav className="blog-breadcrumb" aria-label="Breadcrumb">
             <Link to="/">Home</Link>
             <span>/</span>
@@ -399,18 +404,33 @@ const BlogDetail = () => {
                 aria-label="Article navigation"
               >
                 {previousPost ? (
-                  <Link to={`/blog/${previousPost.id}`}>
+                  <a
+                    href={`/blog/${previousPost.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigateToBlog(previousPost.id, e);
+                    }}
+                  >
                     <small>Previous article</small>
                     <strong>{previousPost.title}</strong>
-                  </Link>
+                  </a>
                 ) : (
                   <span />
                 )}
                 {nextPost ? (
-                  <Link className="next" to={`/blog/${nextPost.id}`}>
+                  <a
+                    className="next"
+                    href={`/blog/${nextPost.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigateToBlog(nextPost.id, e);
+                    }}
+                  >
                     <small>Next article</small>
                     <strong>{nextPost.title}</strong>
-                  </Link>
+                  </a>
                 ) : (
                   <span />
                 )}
@@ -439,11 +459,18 @@ const BlogDetail = () => {
                 </div>
               </aside>
             </article>
-            <BlogSidebar currentPostId={post.id} />
+            <BlogSidebar currentPostId={post.id} onNavigate={navigateToBlog} />
           </div>
         </div>
       </div>
+
+      <GenderSelectionModal
+        isOpen={isGenderModalOpen}
+        onClose={handleGenderModalClose}
+        onContinue={handleGenderContinue}
+      />
     </>
   );
 };
 export default BlogDetail;
+

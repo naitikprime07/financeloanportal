@@ -1,10 +1,17 @@
-import { Link } from 'react-router-dom';
 import './BlogCard.css';
 
-const BlogCard = ({ post }) => {
+const BlogCard = ({ post, onNavigate }) => {
+  const handleClick = (e) => {
+    if (onNavigate) {
+      e.preventDefault();
+      e.stopPropagation();
+      onNavigate(post.id, e);
+    }
+  };
+
   return (
     <article className="blog-card">
-      <Link to={`/blog/${post.id}`} className="blog-card-link">
+      <a href={`/blog/${post.id}`} onClick={handleClick} className="blog-card-link">
         <div className="blog-card-image">
           <div className="blog-card-category">{post.categoryName}</div>
           <img
@@ -42,7 +49,7 @@ const BlogCard = ({ post }) => {
             </svg>
           </div>
         </div>
-      </Link>
+      </a>
     </article>
   );
 };

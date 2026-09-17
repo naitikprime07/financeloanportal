@@ -3,6 +3,8 @@ import { Helmet } from "react-helmet-async";
 import BlogCard from "../components/BlogCard";
 import Sidebar from "../components/Sidebar";
 import AdUnit from "../components/AdUnit";
+import { useBlogNavigation } from '../hooks/useBlogNavigation';
+import GenderSelectionModal from '../components/GenderSelectionModal';
 import { getBlogsForCurrentSiteOrdered } from "../data/blogData";
 import {
   getCurrentSiteLanguage,
@@ -15,6 +17,7 @@ import "./Home.css";
 const POSTS_PER_PAGE = 12;
 
 const Home = () => {
+  const { navigateToBlog, isGenderModalOpen, handleGenderContinue, handleGenderModalClose } = useBlogNavigation();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter and order blogs based on current site language and primary category
@@ -71,7 +74,7 @@ const Home = () => {
 
               <div className="blog-grid">
                 {currentPosts.slice(0, 3).map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} onNavigate={navigateToBlog} />
                 ))}
               </div>
 
@@ -79,7 +82,7 @@ const Home = () => {
 
               <div className="blog-grid">
                 {currentPosts.slice(3, 6).map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} onNavigate={navigateToBlog} />
                 ))}
               </div>
 
@@ -87,7 +90,7 @@ const Home = () => {
 
               <div className="blog-grid">
                 {currentPosts.slice(6, 9).map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} onNavigate={navigateToBlog} />
                 ))}
               </div>
 
@@ -95,7 +98,7 @@ const Home = () => {
 
               <div className="blog-grid">
                 {currentPosts.slice(9).map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} onNavigate={navigateToBlog} />
                 ))}
               </div>
 
@@ -150,6 +153,12 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <GenderSelectionModal
+        isOpen={isGenderModalOpen}
+        onClose={handleGenderModalClose}
+        onContinue={handleGenderContinue}
+      />
     </>
   );
 };

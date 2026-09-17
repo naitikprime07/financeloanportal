@@ -4,6 +4,8 @@ import { Helmet } from "react-helmet-async";
 import BlogCard from "../components/BlogCard";
 import Sidebar from "../components/Sidebar";
 import AdUnit from "../components/AdUnit";
+import { useBlogNavigation } from '../hooks/useBlogNavigation';
+import GenderSelectionModal from '../components/GenderSelectionModal';
 import {
   getBlogsByCategory,
   getCategoryBySlug,
@@ -18,6 +20,7 @@ import {
 import "./Category.css";
 
 const Category = () => {
+  const { navigateToBlog, isGenderModalOpen, handleGenderContinue, handleGenderModalClose } = useBlogNavigation();
   const { categorySlug } = useParams();
   const category = getCategoryBySlug(categorySlug);
 
@@ -66,7 +69,7 @@ const Category = () => {
                 <>
                   <div className="blog-grid">
                     {posts.slice(0, 3).map((post) => (
-                      <BlogCard key={post.id} post={post} />
+                      <BlogCard key={post.id} post={post} onNavigate={navigateToBlog} />
                     ))}
                   </div>
 
@@ -74,7 +77,7 @@ const Category = () => {
 
                   <div className="blog-grid">
                     {posts.slice(3).map((post) => (
-                      <BlogCard key={post.id} post={post} />
+                      <BlogCard key={post.id} post={post} onNavigate={navigateToBlog} />
                     ))}
                   </div>
                 </>
@@ -119,6 +122,12 @@ const Category = () => {
           </div>
         </div>
       </div>
+
+      <GenderSelectionModal
+        isOpen={isGenderModalOpen}
+        onClose={handleGenderModalClose}
+        onContinue={handleGenderContinue}
+      />
     </>
   );
 };

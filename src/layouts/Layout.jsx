@@ -6,8 +6,9 @@ import CookieConsent from "../components/CookieConsent";
 import MobileAnchorAd from "../components/MobileAnchorAd";
 import DesktopSideAds from "../components/DesktopSideAds";
 import AdScriptLoader from "../components/AdScriptLoader";
-import TopFloatingExpandableAd from "../components/TopFloatingExpandableAd";
 import AdUnit from "../components/AdUnit";
+import BlogInterstitialGate from "../components/BlogInterstitialGate";
+import "./Layout.css";
 
 const Layout = () => {
   const location = useLocation();
@@ -17,8 +18,13 @@ const Layout = () => {
   return (
     <>
       <AdScriptLoader />
-      <TopFloatingExpandableAd />
+      <BlogInterstitialGate />
       <Header />
+      <section className="header-ad-section" aria-label="Top advertisement">
+        <div className="container">
+          <AdUnit key={`header-${location.pathname}`} slot="TOP" />
+        </div>
+      </section>
       <main className="main-content">
         <Outlet key={location.pathname} />
       </main>
@@ -35,4 +41,3 @@ const Layout = () => {
   );
 };
 export default Layout;
-
