@@ -90,6 +90,18 @@
   stroke-width: 2;
 }
 
+.bottom-anchor-ad.is-compact .bottom-anchor-panel {
+  width: min(100%, var(--anchor-compact-width, 180px));
+  height: calc(var(--anchor-compact-height, 25px) + 36px);
+}
+
+.bottom-anchor-ad.is-compact .bottom-anchor-creative {
+  height: var(--anchor-compact-height, 25px);
+}
+
+.bottom-anchor-ad.is-compact .bottom-anchor-slot {
+  transform: translateX(-50%) scale(var(--anchor-compact-scale, .5));
+}
 .bottom-anchor-ad.is-minimized .bottom-anchor-panel {
   width: min(180px, calc(100vw - 16px));
   height: 40px;
@@ -123,6 +135,9 @@
   height: calc(40px + env(safe-area-inset-bottom, 0px));
 }
 
+.bottom-anchor-clearance.is-compact {
+  height: calc(var(--anchor-compact-height, 25px) + 36px + env(safe-area-inset-bottom, 0px));
+}
 .bottom-anchor-clearance.is-loading {
   height: 18px;
 }

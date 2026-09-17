@@ -42,7 +42,8 @@ const BottomAnchorAd = () => {
   const slotRef = useRef(null);
   const measureFrameRef = useRef(0);
   const [loadState, setLoadState] = useState("loading");
-  const [minimized, setMinimized] = useState(false);
+  const [displayState, setDisplayState] = useState("expanded");
+  const [transitionDirection, setTransitionDirection] = useState("collapsing");
   const [creativeSize, setCreativeSize] = useState(null);
   const [availableWidth, setAvailableWidth] = useState(viewportWidth);
 
@@ -96,7 +97,8 @@ const BottomAnchorAd = () => {
           : null,
       );
       setLoadState("filled");
-      setMinimized(false);
+      setDisplayState("expanded");
+      setTransitionDirection("collapsing");
       measureCreative();
       gamLog("bottom-anchor-rendered", { path: AD_PATH, size: event.size });
     };
@@ -154,43 +156,74 @@ const BottomAnchorAd = () => {
   const scale = creativeSize ? Math.min(1, maxWidth / creativeSize[0]) : 1;
   const renderedWidth = creativeSize ? creativeSize[0] * scale : Math.min(320, maxWidth);
   const renderedHeight = creativeSize ? creativeSize[1] * scale : 50;
+  const compactScale = scale * 0.5;
+  const compactWidth = Math.min(renderedWidth, Math.max(180, renderedWidth * 0.5));
+  const compactHeight = renderedHeight * 0.5;
   const style = {
     "--anchor-width": `${renderedWidth}px`,
     "--anchor-height": `${renderedHeight}px`,
     "--anchor-creative-width": `${creativeSize?.[0] || renderedWidth}px`,
     "--anchor-creative-height": `${creativeSize?.[1] || renderedHeight}px`,
     "--anchor-scale": scale,
+    "--anchor-compact-width": `${compactWidth}px`,
+    "--anchor-compact-height": `${compactHeight}px`,
+    "--anchor-compact-scale": compactScale,
   };
+
+  const toggleAnchor = () => {
+    if (displayState === "expanded") {
+      setTransitionDirection("collapsing");
+      setDisplayState("compact");
+      return;
+    }
+
+    if (displayState === "minimized") {
+      setTransitionDirection("expanding");
+      setDisplayState("compact");
+      return;
+    }
+
+    setDisplayState(transitionDirection === "collapsing" ? "minimized" : "expanded");
+  };
+
+  const isExpanded = displayState === "expanded";
+  const isMinimized = displayState === "minimized";
+  const nextActionExpands = isMinimized || transitionDirection === "expanding";
+  const toggleLabel = isExpanded
+    ? "Half size"
+    : nextActionExpands
+      ? "Expand ad"
+      : "Minimize ad";
 
   return (
     <>
       <aside
-        className={`bottom-anchor-ad ${minimized ? "is-minimized" : "is-expanded"} is-${loadState}`}
+        className={`bottom-anchor-ad is-${displayState} is-${loadState}`}
         style={style}
         aria-label="Advertisement"
       >
         <div className="bottom-anchor-panel">
-          <div className="bottom-anchor-creative" aria-hidden={minimized}>
+          <div className="bottom-anchor-creative" aria-hidden={isMinimized}>
             <div className="bottom-anchor-slot" id={id.current} />
           </div>
           {loadState === "filled" && (
             <button
               type="button"
               className="bottom-anchor-toggle"
-              onClick={() => setMinimized((value) => !value)}
-              aria-expanded={!minimized}
-              aria-label={minimized ? "Expand advertisement" : "Minimize advertisement"}
+              onClick={toggleAnchor}
+              aria-expanded={isExpanded}
+              aria-label={nextActionExpands ? "Expand advertisement" : "Minimize advertisement"}
             >
-              <span>{minimized ? "Expand ad" : "Minimize ad"}</span>
+              <span>{toggleLabel}</span>
               <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d={minimized ? "m4 10 4-4 4 4" : "m4 6 4 4 4-4"} />
+                <path d={nextActionExpands ? "m4 10 4-4 4 4" : "m4 6 4 4 4-4"} />
               </svg>
             </button>
           )}
         </div>
       </aside>
       <div
-        className={`bottom-anchor-clearance ${minimized ? "is-minimized" : "is-expanded"} is-${loadState}`}
+        className={`bottom-anchor-clearance is-${displayState} is-${loadState}`}
         style={style}
         aria-hidden="true"
       />

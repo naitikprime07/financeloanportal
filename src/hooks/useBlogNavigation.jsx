@@ -59,6 +59,8 @@ const useBlogNavigationController = () => {
   const slotRef = useRef(null);
   const showRewardedRef = useRef(null);
   const rewardGrantedRef = useRef(false);
+  const pendingRewardRequestRef = useRef(false);
+  const pendingRequestTimeoutRef = useRef(null);
   const navigationLockedRef = useRef(false);
   const currentHostnameRef = useRef(initialGate.hostname);
   const isSubdomainRef = useRef(initialGate.eligible);
@@ -72,6 +74,9 @@ const useBlogNavigationController = () => {
     setIsProcessing(false);
     pendingBlogSlugRef.current = null;
     rewardGrantedRef.current = false;
+    pendingRewardRequestRef.current = false;
+    window.clearTimeout(pendingRequestTimeoutRef.current);
+    pendingRequestTimeoutRef.current = null;
     navigationLockedRef.current = false;
     setSelectedGender(null);
     setAdStatus('disabled');
@@ -106,6 +111,22 @@ const useBlogNavigationController = () => {
         showRewardedRef.current = event.makeRewardedVisible;
         setAdStatus('ready');
         gamLog('blog-nav-rewarded-ready', { path: REWARDED_PATH });
+        if (pendingRewardRequestRef.current) {
+          pendingRewardRequestRef.current = false;
+          window.clearTimeout(pendingRequestTimeoutRef.current);
+          pendingRequestTimeoutRef.current = null;
+          try {
+            setAdStatus('showing');
+            event.makeRewardedVisible();
+            gamLog('blog-nav-rewarded-shown-after-wait', { path: REWARDED_PATH });
+          } catch (error) {
+            setAdStatus('failed');
+            gamWarn('blog-nav-rewarded-show-failed', {
+              message: error instanceof Error ? error.message : String(error),
+            });
+            resolvePopupSession('rewarded-show-failed');
+          }
+        }
       },
       rewardedSlotGranted: (event) => {
         if (!active || event.slot !== slotRef.current) return;
@@ -128,6 +149,7 @@ const useBlogNavigationController = () => {
           clearTimeout(timeoutId);
           setAdStatus('failed');
           gamWarn('blog-nav-rewarded-no-fill', { path: REWARDED_PATH });
+          if (pendingRewardRequestRef.current) resolvePopupSession('rewarded-no-fill');
 
         }
       },
@@ -142,6 +164,7 @@ const useBlogNavigationController = () => {
           if (!rewardedSlot) {
             setAdStatus('failed');
             gamWarn('blog-nav-rewarded-unsupported', { path: REWARDED_PATH });
+            if (pendingRewardRequestRef.current) resolvePopupSession('rewarded-unsupported');
             return;
           }
           rewardedSlot.addService(gt.pubads());
@@ -153,11 +176,13 @@ const useBlogNavigationController = () => {
             if (active) {
               setAdStatus('failed');
               gamWarn('blog-nav-rewarded-timeout', { path: REWARDED_PATH, timeoutMs: 30000 });
+              if (pendingRewardRequestRef.current) resolvePopupSession('rewarded-timeout');
             }
           }, 30000);
         } catch (error) {
           setAdStatus('failed');
           gamWarn('blog-nav-rewarded-exception', { path: REWARDED_PATH, message: error instanceof Error ? error.message : String(error) });
+          if (pendingRewardRequestRef.current) resolvePopupSession('rewarded-exception');
         }
       });
     }, 100);
@@ -168,6 +193,9 @@ const useBlogNavigationController = () => {
       const slotToDestroy = slotRef.current;
       slotRef.current = null;
       showRewardedRef.current = null;
+      pendingRewardRequestRef.current = false;
+      window.clearTimeout(pendingRequestTimeoutRef.current);
+      pendingRequestTimeoutRef.current = null;
       window.googletag?.cmd?.push(() => {
         Object.entries(handlers).forEach(([eventName, handler]) => window.googletag.pubads().removeEventListener(eventName, handler));
         if (slotToDestroy) window.googletag.destroySlots([slotToDestroy]);
@@ -200,10 +228,18 @@ const useBlogNavigationController = () => {
         resolvePopupSession('rewarded-show-failed');
 
       }
+    } else if (adStatus === 'idle' || adStatus === 'loading') {
+      pendingRewardRequestRef.current = true;
+      window.clearTimeout(pendingRequestTimeoutRef.current);
+      pendingRequestTimeoutRef.current = window.setTimeout(() => {
+        if (pendingRewardRequestRef.current) {
+          resolvePopupSession('rewarded-ready-timeout');
+        }
+      }, 30000);
+      gamLog('blog-nav-rewarded-waiting-for-ready', { adStatus });
     } else {
       gamWarn('blog-nav-ad-not-available', { adStatus });
       resolvePopupSession('rewarded-ad-unavailable');
-
     }
   }, [adStatus, resolvePopupSession]);
 
