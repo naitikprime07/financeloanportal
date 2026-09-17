@@ -41,7 +41,17 @@ const BlogNavigationContext = createContext(null);
 
 const useBlogNavigationController = () => {
   const navigate = useNavigate();
-  const [isGenderModalOpen, setIsGenderModalOpen] = useState(false);
+  const initialGateRef = useRef(null);
+  if (!initialGateRef.current) {
+    const hostname = getCurrentHost();
+    const eligible = isSubdomain(hostname);
+    const completed = eligible && isRewardCompletedForPageSession(hostname);
+    initialGateRef.current = { hostname, eligible, completed };
+  }
+  const initialGate = initialGateRef.current;
+  const [isGenderModalOpen, setIsGenderModalOpen] = useState(
+    () => initialGate.eligible && !initialGate.completed,
+  );
   const [selectedGender, setSelectedGender] = useState(null);
   const [adStatus, setAdStatus] = useState('idle');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -50,9 +60,23 @@ const useBlogNavigationController = () => {
   const showRewardedRef = useRef(null);
   const rewardGrantedRef = useRef(false);
   const navigationLockedRef = useRef(false);
-  const currentHostnameRef = useRef(getCurrentHost());
-  const isSubdomainRef = useRef(isSubdomain(getCurrentHost()));
-  const completedRef = useRef(false);
+  const currentHostnameRef = useRef(initialGate.hostname);
+  const isSubdomainRef = useRef(initialGate.eligible);
+  const completedRef = useRef(initialGate.completed);
+
+  const resolvePopupSession = useCallback((reason) => {
+    const hostname = currentHostnameRef.current;
+    markRewardCompletedForPageSession(hostname);
+    completedRef.current = true;
+    setIsGenderModalOpen(false);
+    setIsProcessing(false);
+    pendingBlogSlugRef.current = null;
+    rewardGrantedRef.current = false;
+    navigationLockedRef.current = false;
+    setSelectedGender(null);
+    setAdStatus('disabled');
+    gamLog('gender-reward-session-resolved', { hostname, reason });
+  }, []);
 
   useEffect(() => {
     const hostname = getCurrentHost();
@@ -60,9 +84,7 @@ const useBlogNavigationController = () => {
     isSubdomainRef.current = isSubdomain(hostname);
     completedRef.current = isRewardCompletedForPageSession(hostname);
     gamLog('blog-nav-init', { hostname, isSubdomain: isSubdomainRef.current, completed: completedRef.current });
-    // This controller is mounted once by Layout, so the gate covers every route.
     if (isSubdomainRef.current && !completedRef.current) {
-      setIsGenderModalOpen(true);
       gamLog('subdomain-first-visit-auto-popup', { hostname });
     }
     if (!isSubdomainRef.current || completedRef.current) {
@@ -96,25 +118,9 @@ const useBlogNavigationController = () => {
         showRewardedRef.current = null;
         setAdStatus('closed');
         gamLog('blog-nav-rewarded-closed', { granted: rewardGrantedRef.current });
-        if (rewardGrantedRef.current) {
-          const hostname = currentHostnameRef.current;
-          markRewardCompletedForPageSession(hostname);
-          completedRef.current = true;
-          setIsGenderModalOpen(false);
-          setIsProcessing(false);
-          pendingBlogSlugRef.current = null;
-          rewardGrantedRef.current = false;
-          navigationLockedRef.current = false;
-          setSelectedGender(null);
-          setAdStatus('disabled');
-        } else {
-          setIsGenderModalOpen(false);
-          setIsProcessing(false);
-          pendingBlogSlugRef.current = null;
-          rewardGrantedRef.current = false;
-          navigationLockedRef.current = false;
-          setSelectedGender(null);
-        }
+        resolvePopupSession(
+          rewardGrantedRef.current ? 'reward-granted' : 'rewarded-ad-dismissed',
+        );
       },
       slotRenderEnded: (event) => {
         if (!active || event.slot !== slotRef.current) return;
@@ -122,11 +128,7 @@ const useBlogNavigationController = () => {
           clearTimeout(timeoutId);
           setAdStatus('failed');
           gamWarn('blog-nav-rewarded-no-fill', { path: REWARDED_PATH });
-          setIsGenderModalOpen(false);
-          setIsProcessing(false);
-          pendingBlogSlugRef.current = null;
-          navigationLockedRef.current = false;
-          setSelectedGender(null);
+
         }
       },
     };
@@ -140,7 +142,6 @@ const useBlogNavigationController = () => {
           if (!rewardedSlot) {
             setAdStatus('failed');
             gamWarn('blog-nav-rewarded-unsupported', { path: REWARDED_PATH });
-            setIsGenderModalOpen(false);
             return;
           }
           rewardedSlot.addService(gt.pubads());
@@ -151,8 +152,6 @@ const useBlogNavigationController = () => {
           timeoutId = setTimeout(() => {
             if (active) {
               setAdStatus('failed');
-              setIsGenderModalOpen(false);
-              setIsProcessing(false);
               gamWarn('blog-nav-rewarded-timeout', { path: REWARDED_PATH, timeoutMs: 30000 });
             }
           }, 30000);
@@ -174,7 +173,7 @@ const useBlogNavigationController = () => {
         if (slotToDestroy) window.googletag.destroySlots([slotToDestroy]);
       });
     };
-  }, []);
+  }, [resolvePopupSession]);
 
   const navigateToBlog = useCallback((blogSlug, event) => {
     if (event) {
@@ -198,21 +197,15 @@ const useBlogNavigationController = () => {
       } catch (error) {
         setAdStatus('failed');
         gamWarn('blog-nav-rewarded-show-failed', { message: error instanceof Error ? error.message : String(error) });
-        setIsGenderModalOpen(false);
-        setIsProcessing(false);
-        pendingBlogSlugRef.current = null;
-        navigationLockedRef.current = false;
-        setSelectedGender(null);
+        resolvePopupSession('rewarded-show-failed');
+
       }
     } else {
       gamWarn('blog-nav-ad-not-available', { adStatus });
-      setIsGenderModalOpen(false);
-      setIsProcessing(false);
-      pendingBlogSlugRef.current = null;
-      navigationLockedRef.current = false;
-      setSelectedGender(null);
+      resolvePopupSession('rewarded-ad-unavailable');
+
     }
-  }, [adStatus]);
+  }, [adStatus, resolvePopupSession]);
 
 
   return { navigateToBlog, isGenderModalOpen, selectedGender, adStatus, isProcessing, handleGenderContinue };

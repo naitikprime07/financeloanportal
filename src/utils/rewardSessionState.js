@@ -1,4 +1,4 @@
-const STORAGE_KEY_PREFIX = 'blogRewardCompleted:';
+const STORAGE_KEY_PREFIX = 'financeLoanPortal:genderRewardPopupCompleted:';
 const completedHosts = new Set();
 const listeners = new Set();
 
