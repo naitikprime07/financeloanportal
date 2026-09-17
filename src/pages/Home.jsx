@@ -4,7 +4,6 @@ import BlogCard from "../components/BlogCard";
 import Sidebar from "../components/Sidebar";
 import AdUnit from "../components/AdUnit";
 import { useBlogNavigation } from '../hooks/useBlogNavigation';
-import GenderSelectionModal from '../components/GenderSelectionModal';
 import { getBlogsForCurrentSiteOrdered } from "../data/blogData";
 import {
   getCurrentSiteLanguage,
@@ -17,7 +16,7 @@ import "./Home.css";
 const POSTS_PER_PAGE = 12;
 
 const Home = () => {
-  const { navigateToBlog, isGenderModalOpen, handleGenderContinue, handleGenderModalClose } = useBlogNavigation();
+  const { navigateToBlog } = useBlogNavigation();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter and order blogs based on current site language and primary category
@@ -154,11 +153,7 @@ const Home = () => {
         </div>
       </div>
 
-      <GenderSelectionModal
-        isOpen={isGenderModalOpen}
-        onClose={handleGenderModalClose}
-        onContinue={handleGenderContinue}
-      />
+
     </>
   );
 };

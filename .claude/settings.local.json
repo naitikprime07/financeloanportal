@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "Bash(npm run build)",
-      "Bash(find ./src -type f ( -name \"*.js\" -o -name \"*.jsx\" ) -exec grep -l \"financeloanplatform\\|finvexa\" {} ;)"
+      "Bash(find ./src -type f ( -name \"*.js\" -o -name \"*.jsx\" ) -exec grep -l \"financeloanplatform\\|finvexa\" {} ;)",
+      "Bash(tasklist)",
+      "Bash(findstr /i \"node\")",
+      "Bash(powershell -Command \"(Get-Content src/pages/BlogDetail.jsx -Raw) -replace ''import \\{ useRef, useState \\} from \"\"react\"\";\\nimport \\{ useParams, Link \\} from \"\"react-router-dom\"\";\\nimport \\{ Helmet \\} from \"\"react-helmet-async\"\";\\nimport BlogSidebar from \"\"../components/BlogSidebar\"\";\\nimport AdUnit from \"\"../components/AdUnit\"\";\\nimport BlogAd from \"\"../components/BlogAd\"\";\\nimport BlogRewardedAd from \"\"../components/BlogRewardedAd\"\";\\nimport BlogBottomImage from \"\"../components/BlogBottomImage\"\";\\nimport BlogPixel from \"\"../components/BlogPixel\"\";\\nimport LanguageToggle from \"\"../components/LanguageToggle\"\";'',''import { useRef, useState } from \"\"react\"\";\\nimport { useParams, Link } from \"\"react-router-dom\"\";\\nimport { Helmet } from \"\"react-helmet-async\"\";\\nimport BlogSidebar from \"\"../components/BlogSidebar\"\";\\nimport AdUnit from \"\"../components/AdUnit\"\";\\nimport BlogAd from \"\"../components/BlogAd\"\";\\nimport BlogRewardedAd from \"\"../components/BlogRewardedAd\"\";\\nimport BlogBottomImage from \"\"../components/BlogBottomImage\"\";\\nimport BlogPixel from \"\"../components/BlogPixel\"\";\\nimport LanguageToggle from \"\"../components/LanguageToggle\"\";\\nimport { useBlogNavigation } from ''''../hooks/useBlogNavigation'''';\\nimport GenderSelectionModal from ''''../components/GenderSelectionModal'''';'' | Set-Content src/pages/BlogDetail.jsx\")",
+      "Bash(npm run dev)",
+      "Bash(PORT=5174 npm run dev)",
+      "Bash(cat \"d:/financeloanportal/src/layouts/Layout.jsx\")",
+      "Bash(findstr /n \"^\")",
+      "Bash(findstr /c:\"12:\" /c:\"13:\")",
+      "Bash(git add src/components/BlogCard.jsx src/components/BlogSidebar.jsx src/layouts/Layout.jsx src/layouts/Layout.css src/pages/BlogDetail.jsx src/pages/Category.jsx src/pages/Home.jsx src/components/GenderSelectionModal.jsx src/components/GenderSelectionModal.css src/hooks/)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd interstitial ads, gender modal, and enhanced blog navigation\n\nFeatures added:\n- Interstitial ads on blog navigation (BlogInterstitialGate)\n- Gender selection modal for subdomain first-time users\n- Rewarded ad flow for subdomains with completion tracking\n- Moved top ad below header as centered square box\n- Enhanced blog navigation with useBlogNavigation hook\n\nModified files:\n- Blog navigation components (BlogCard, BlogSidebar, Home, Category, BlogDetail)\n- Layout with interstitial gate and new header ad position\n- Added GenderSelectionModal component with styling\n- Added useBlogNavigation hook for navigation logic\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(cat \"d:/financeloanportal/src/hooks/useBlogNavigation.js\")",
+      "Bash(cat \"d:/financeloanportal/src/layouts/Layout.css\")"
     ],
     "deny": [],
     "ask": []

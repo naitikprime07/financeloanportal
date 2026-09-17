@@ -83,6 +83,7 @@ const SIZES = {
 const BLOG_NORMAL_SIZES = [[300, 600], [300, 250]];
 const BLOG_HORIZONTAL_SIZES = [[728, 90], [468, 60], [320, 100], [320, 50]];
 const BLOG_POSTER_SIZES = [[300, 250], [250, 250]];
+const SQUARE_SIZES = [[250, 250], [200, 200]];
 
 const getBlogNormalSizes = (availableWidth) =>
   availableWidth >= 300 ? BLOG_NORMAL_SIZES : [];
@@ -100,7 +101,15 @@ const getBlogPosterSizes = (availableWidth) => {
   return [];
 };
 
-const buildMapping = (gt, key, blogNormal = false, horizontal = false, availableWidth = 0, poster = false) => {
+const buildMapping = (gt, key, blogNormal = false, horizontal = false, availableWidth = 0, poster = false, square = false) => {
+  if (square) {
+    return gt
+      .sizeMapping()
+      .addSize([250, 0], [[250, 250], [200, 200]])
+      .addSize([200, 0], [[200, 200]])
+      .addSize([0, 0], [])
+      .build();
+  }
   if (poster) {
     const eligibleSizes = getBlogPosterSizes(availableWidth);
     if (!eligibleSizes.length) return null;
@@ -229,17 +238,18 @@ const AdUnit = ({
   const blogNormal = size === "blog-normal";
   const horizontal = size === "blog-horizontal";
   const poster = size === "blog-poster";
+  const square = size === "square";
   const sizes = useMemo(
-    () => poster ? BLOG_POSTER_SIZES : horizontal ? BLOG_HORIZONTAL_SIZES : blogNormal ? BLOG_NORMAL_SIZES : SIZES[key],
-    [blogNormal, horizontal, poster, key],
+    () => square ? SQUARE_SIZES : poster ? BLOG_POSTER_SIZES : horizontal ? BLOG_HORIZONTAL_SIZES : blogNormal ? BLOG_NORMAL_SIZES : SIZES[key],
+    [blogNormal, horizontal, poster, square, key],
   );
   useEffect(() => {
-    if (key !== "BLOG_FEATURED" && !blogNormal && !horizontal && !poster) return undefined;
+    if (key !== "BLOG_FEATURED" && !blogNormal && !horizontal && !poster && !square) return undefined;
     const updateViewportBand = () =>
       setViewportBand(getBlogFeaturedViewportBand());
     window.addEventListener("resize", updateViewportBand);
     return () => window.removeEventListener("resize", updateViewportBand);
-  }, [key, blogNormal, horizontal, poster]);
+  }, [key, blogNormal, horizontal, poster, square]);
   useEffect(() => {
     setState("loading");
     setRenderedSize(null);
@@ -335,7 +345,7 @@ const AdUnit = ({
             return;
           }
           const availableWidth = document.getElementById(id.current)?.clientWidth || window.innerWidth;
-          const responsiveMapping = buildMapping(gt, key, blogNormal, horizontal, availableWidth, poster);
+          const responsiveMapping = buildMapping(gt, key, blogNormal, horizontal, availableWidth, poster, square);
           if (!responsiveMapping) {
             setState("empty");
             gamWarn("size-mapping-invalid", { slot, key, path, sizes });
@@ -386,7 +396,7 @@ const AdUnit = ({
         gamLog("slot-destroyed", { slot, key, path, hadSlot: Boolean(slotToDestroy) });
       });
     };
-  }, [key, path, sizes, slot, enableRefresh, refreshInterval, viewportBand, blogNormal, horizontal, poster]);
+  }, [key, path, sizes, slot, enableRefresh, refreshInterval, viewportBand, blogNormal, horizontal, poster, square]);
   return (
     <aside
       className={`ad-unit-wrapper is-${state} ${sticky ? "ad-sticky" : ""} ${className}`}
@@ -405,5 +415,3 @@ const AdUnit = ({
   );
 };
 export default AdUnit;
-
-

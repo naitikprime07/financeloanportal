@@ -17,6 +17,26 @@
 
 .header-ad-section .ad-unit-wrapper {
   margin: 0 auto;
+  width: min(100%, 250px);
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+}
+
+.header-ad-section .ad-unit {
+  width: 100%;
+  max-width: 250px;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-ad-section .ad-unit > div,
+.header-ad-section .ad-unit iframe {
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 /* Responsive adjustments */

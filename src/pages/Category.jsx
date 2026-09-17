@@ -5,7 +5,6 @@ import BlogCard from "../components/BlogCard";
 import Sidebar from "../components/Sidebar";
 import AdUnit from "../components/AdUnit";
 import { useBlogNavigation } from '../hooks/useBlogNavigation';
-import GenderSelectionModal from '../components/GenderSelectionModal';
 import {
   getBlogsByCategory,
   getCategoryBySlug,
@@ -20,7 +19,7 @@ import {
 import "./Category.css";
 
 const Category = () => {
-  const { navigateToBlog, isGenderModalOpen, handleGenderContinue, handleGenderModalClose } = useBlogNavigation();
+  const { navigateToBlog } = useBlogNavigation();
   const { categorySlug } = useParams();
   const category = getCategoryBySlug(categorySlug);
 
@@ -123,11 +122,7 @@ const Category = () => {
         </div>
       </div>
 
-      <GenderSelectionModal
-        isOpen={isGenderModalOpen}
-        onClose={handleGenderModalClose}
-        onContinue={handleGenderContinue}
-      />
+
     </>
   );
 };

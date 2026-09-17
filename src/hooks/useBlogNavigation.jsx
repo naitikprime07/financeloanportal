@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gamLog, gamWarn } from '../components/gamDebug';
 import { getCurrentHost } from '../config/siteConfig';
+import GenderSelectionModal from '../components/GenderSelectionModal';
 
 const NETWORK = String(import.meta.env.VITE_GAM_NETWORK_CODE || '').trim().replace(/^\/+|\/+$/g, '');
 const normalizePath = (value) => {
@@ -55,7 +56,9 @@ const saveCompletionStatus = (hostname) => {
   }
 };
 
-export const useBlogNavigation = () => {
+const BlogNavigationContext = createContext(null);
+
+const useBlogNavigationController = () => {
   const navigate = useNavigate();
   const [isGenderModalOpen, setIsGenderModalOpen] = useState(false);
   const [selectedGender, setSelectedGender] = useState(null);
@@ -76,6 +79,11 @@ export const useBlogNavigation = () => {
     isSubdomainRef.current = isSubdomain(hostname);
     completedRef.current = getCompletionStatus(hostname);
     gamLog('blog-nav-init', { hostname, isSubdomain: isSubdomainRef.current, completed: completedRef.current });
+    // This controller is mounted once by Layout, so the gate covers every route.
+    if (isSubdomainRef.current && !completedRef.current) {
+      setIsGenderModalOpen(true);
+      gamLog('subdomain-first-visit-auto-popup', { hostname });
+    }
     if (!isSubdomainRef.current || completedRef.current) {
       setAdStatus('disabled');
       return undefined;
@@ -155,6 +163,7 @@ export const useBlogNavigation = () => {
           if (!rewardedSlot) {
             setAdStatus('failed');
             gamWarn('blog-nav-rewarded-unsupported', { path: REWARDED_PATH });
+            setIsGenderModalOpen(false);
             return;
           }
           rewardedSlot.addService(gt.pubads());
@@ -163,8 +172,10 @@ export const useBlogNavigation = () => {
           gt.display(rewardedSlot);
           gamLog('blog-nav-rewarded-defined', { path: REWARDED_PATH });
           timeoutId = setTimeout(() => {
-            if (active && adStatus === 'loading') {
+            if (active) {
               setAdStatus('failed');
+              setIsGenderModalOpen(false);
+              setIsProcessing(false);
               gamWarn('blog-nav-rewarded-timeout', { path: REWARDED_PATH, timeoutMs: 30000 });
             }
           }, 30000);
@@ -193,23 +204,10 @@ export const useBlogNavigation = () => {
       event.preventDefault();
       event.stopPropagation();
     }
-    if (!isSubdomainRef.current) {
-      gamLog('blog-nav-main-domain-direct', { blogSlug });
-      navigate(`/blog/${blogSlug}`);
-      return;
-    }
-    if (completedRef.current) {
-      gamLog('blog-nav-subdomain-completed-direct', { blogSlug, hostname: currentHostnameRef.current });
-      navigate(`/blog/${blogSlug}`);
-      return;
-    }
-    if (isProcessing || navigationLockedRef.current) return;
-    pendingBlogSlugRef.current = blogSlug;
-    setIsGenderModalOpen(true);
-    setSelectedGender(null);
-    rewardGrantedRef.current = false;
-    gamLog('blog-nav-subdomain-first-time', { blogSlug, hostname: currentHostnameRef.current });
-  }, [isProcessing, navigate]);
+    // Blog clicks remain independent; BlogInterstitialGate handles the visit.
+    gamLog('blog-nav-open', { blogSlug, hostname: currentHostnameRef.current });
+    navigate(`/blog/${blogSlug}`);
+  }, [navigate]);
 
   const handleGenderContinue = useCallback((gender) => {
     setSelectedGender(gender);
@@ -249,4 +247,23 @@ export const useBlogNavigation = () => {
   }, [isProcessing]);
 
   return { navigateToBlog, isGenderModalOpen, selectedGender, adStatus, isProcessing, handleGenderContinue, handleGenderModalClose };
+};
+export const BlogNavigationProvider = ({ children }) => {
+  const value = useBlogNavigationController();
+  return (
+    <BlogNavigationContext.Provider value={value}>
+      {children}
+      <GenderSelectionModal
+        isOpen={value.isGenderModalOpen}
+        onClose={value.handleGenderModalClose}
+        onContinue={value.handleGenderContinue}
+      />
+    </BlogNavigationContext.Provider>
+  );
+};
+
+export const useBlogNavigation = () => {
+  const value = useContext(BlogNavigationContext);
+  if (!value) throw new Error('useBlogNavigation must be used within BlogNavigationProvider');
+  return value;
 };

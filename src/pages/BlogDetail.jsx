@@ -9,7 +9,6 @@ import BlogBottomImage from "../components/BlogBottomImage";
 import BlogPixel from "../components/BlogPixel";
 import LanguageToggle from "../components/LanguageToggle";
 import { useBlogNavigation } from '../hooks/useBlogNavigation';
-import GenderSelectionModal from '../components/GenderSelectionModal';
 import { BLOG_INTERSTITIAL_TARGET_ID } from '../components/BlogInterstitialGate';
 
 import NonCategoryBlogLinks from "../components/NonCategoryBlogLinks";
@@ -134,7 +133,7 @@ const BlogScrollPrompt = ({ section }) => {
 };
 
 const BlogDetail = () => {
-  const { navigateToBlog, isGenderModalOpen, handleGenderContinue, handleGenderModalClose } = useBlogNavigation();
+  const { navigateToBlog } = useBlogNavigation();
   const { slug } = useParams();
   const requestedPost = getBlogPost(slug);
   const siteLanguage = getCurrentSiteLanguage();
@@ -463,14 +462,7 @@ const BlogDetail = () => {
           </div>
         </div>
       </div>
-
-      <GenderSelectionModal
-        isOpen={isGenderModalOpen}
-        onClose={handleGenderModalClose}
-        onContinue={handleGenderContinue}
-      />
     </>
   );
 };
 export default BlogDetail;
-

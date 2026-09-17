@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { gamLog, gamWarn } from './gamDebug';
 
 const TARGET_ID = 'blog-continue-reading-target';
@@ -11,7 +12,22 @@ const INTERSTITIAL_PATH = rawPath.startsWith('/')
     : '';
 
 const BlogInterstitialGate = () => {
+  const { pathname } = useLocation();
+
   useEffect(() => {
+    if (!pathname.startsWith('/blog/')) return undefined;
+
+    const hostname = window.location.hostname.toLowerCase().replace(/\.$/, '');
+    const isEligibleSubdomain =
+      hostname.endsWith('.financeloanportal.com') &&
+      hostname !== 'www.financeloanportal.com';
+    if (
+      isEligibleSubdomain &&
+      localStorage.getItem(`blogRewardCompleted:${hostname}`) !== 'true'
+    ) {
+      gamLog('interstitial-deferred-for-first-visit', { hostname, pathname });
+      return undefined;
+    }
     if (!INTERSTITIAL_PATH) {
       gamWarn('interstitial-not-configured', { variable: 'VITE_GAM_AD_UNIT_INTERSTITIAL' });
       return undefined;
@@ -94,7 +110,7 @@ const BlogInterstitialGate = () => {
         destroyInterstitial();
       });
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 };
