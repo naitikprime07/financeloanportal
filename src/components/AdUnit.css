@@ -238,3 +238,30 @@
     max-width: 100% !important;
     box-sizing: border-box;
 }
+
+
+/* One shared, uncropped vertical placement for Blog Detail and Home. */
+.blog-top-ad-frame {
+    width: min(300px, 100%);
+    max-width: 100%;
+    margin: 24px auto;
+    overflow: visible !important;
+    box-sizing: border-box;
+}
+.blog-top-ad-frame .ad-unit-wrapper,
+.blog-top-ad-frame .ad-unit {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    overflow: visible !important;
+    box-sizing: border-box;
+}
+.blog-top-ad-frame .ad-unit > div,
+.blog-top-ad-frame .ad-unit iframe {
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+@media (max-width: 767px) {
+    .blog-top-ad-frame { margin: 20px auto; }
+}

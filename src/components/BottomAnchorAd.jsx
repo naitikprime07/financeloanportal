@@ -41,6 +41,7 @@ const BottomAnchorAd = () => {
   );
   const slotRef = useRef(null);
   const measureFrameRef = useRef(0);
+  const transitionDirectionRef = useRef("collapsing");
   const [loadState, setLoadState] = useState("loading");
   const [anchorState, setAnchorState] = useState("expanded");
   const [creativeSize, setCreativeSize] = useState(null);
@@ -177,18 +178,26 @@ const BottomAnchorAd = () => {
     "--anchor-scale": scale,
   };
 
-  const handleCollapse = () => {
-    setAnchorState("collapsed");
-    gamLog("bottom-anchor-collapsed", { path: AD_PATH });
+  const handleToggle = () => {
+    setAnchorState((current) => {
+      let next;
+      if (current === "expanded") {
+        transitionDirectionRef.current = "collapsing";
+        next = "half-collapsed";
+      } else if (current === "collapsed") {
+        transitionDirectionRef.current = "expanding";
+        next = "half-collapsed";
+      } else {
+        next = transitionDirectionRef.current === "collapsing" ? "collapsed" : "expanded";
+      }
+      gamLog("bottom-anchor-state-changed", { path: AD_PATH, from: current, to: next });
+      return next;
+    });
   };
 
-  const handleExpand = () => {
-    setAnchorState("expanded");
-    gamLog("bottom-anchor-expanded", { path: AD_PATH });
-  };
-
-  const isExpanded = anchorState === "expanded";
-  const isCollapsed = anchorState === "collapsed";
+  const isCollapsing =
+    anchorState === "expanded" ||
+    (anchorState === "half-collapsed" && transitionDirectionRef.current === "collapsing");
 
   return (
     <>
@@ -201,17 +210,18 @@ const BottomAnchorAd = () => {
           {loadState === "filled" && (
             <button
               type="button"
-              className={`bottom-anchor-btn ${isExpanded ? "bottom-anchor-collapse" : "bottom-anchor-expand"}`}
-              onClick={isExpanded ? handleCollapse : handleExpand}
-              aria-label={isExpanded ? "Collapse advertisement" : "Expand advertisement"}
-              title={isExpanded ? "Collapse ad" : "Expand ad"}
+              className="bottom-anchor-btn"
+              onClick={handleToggle}
+              aria-label={isCollapsing ? "Collapse advertisement" : "Expand advertisement"}
+              aria-expanded={anchorState === "expanded"}
+              title={isCollapsing ? "Collapse ad" : "Expand ad"}
             >
               <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d={isExpanded ? "m4 6 4 4 4-4" : "m4 10 4-4 4 4"} />
+                <path d={isCollapsing ? "m4 6 4 4 4-4" : "m4 10 4-4 4 4"} />
               </svg>
             </button>
           )}
-          <div className="bottom-anchor-creative" aria-hidden={isCollapsed}>
+          <div className="bottom-anchor-creative">
             <div className="bottom-anchor-slot" id={id.current} />
           </div>
         </div>

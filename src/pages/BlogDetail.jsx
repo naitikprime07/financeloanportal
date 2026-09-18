@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import BlogSidebar from "../components/BlogSidebar";
-import AdUnit from "../components/AdUnit";
+import BlogTopAd from "../components/BlogTopAd";
 import BlogAd from "../components/BlogAd";
 import BlogRewardedAd from "../components/BlogRewardedAd";
 import BlogBottomImage from "../components/BlogBottomImage";
@@ -227,14 +227,7 @@ const BlogDetail = () => {
             )}
             <span>{post.title}</span>
           </nav>
-          <div className="blog-ad-frame blog-top-ad-frame">
-            <AdUnit
-              key={`${post.id}-blog-top`}
-              slot="MIDDLE_1"
-              size="blog-normal"
-              className="blog-normal-ad"
-            />
-          </div>
+          <BlogTopAd instanceKey={`${post.id}-blog-top`} />
           <div className="blog-detail-layout">
             <article className="blog-detail-content">
               <header className="blog-detail-header">

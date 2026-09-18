@@ -20,7 +20,7 @@
   background: #fff;
   box-shadow: 0 -5px 24px rgba(15, 23, 42, 0.22);
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: auto;
   transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -49,11 +49,11 @@
 .bottom-anchor-btn:hover {
   background: #f8f9fa;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
-  transform: translateY(-1px);
+  transform: translate(-50%, -1px);
 }
 
 .bottom-anchor-btn:active {
-  transform: translateY(0);
+  transform: translate(-50%, 0);
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
 }
 
@@ -75,7 +75,7 @@
   left: 0;
   width: 100%;
   height: var(--anchor-height, 50px);
-  overflow: hidden;
+  overflow: visible;
   opacity: 1;
   transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(0);
@@ -101,19 +101,28 @@
   border: 0;
 }
 
-/* Collapsed State */
-.bottom-anchor-ad.is-collapsed .bottom-anchor-panel {
-  height: 60px;
+/* Intermediate state keeps the same complete creative mounted at a compact scale. */
+.bottom-anchor-ad.is-half-collapsed .bottom-anchor-panel { height: 132px; }
+.bottom-anchor-ad.is-half-collapsed .bottom-anchor-creative {
+  height: 92px;
+  transform: scale(0.45);
+  transform-origin: bottom center;
 }
 
+/* Minimum state is one row; the provider slot is scaled, never recreated. */
+.bottom-anchor-ad.is-collapsed .bottom-anchor-panel { height: 48px; }
 .bottom-anchor-ad.is-collapsed .bottom-anchor-creative {
-  opacity: 0.3;
-  transform: translateY(10px) scale(0.85);
-  pointer-events: none;
+  right: 8px;
+  left: 48px;
+  width: auto;
+  height: 40px;
+  transform: scale(0.16);
+  transform-origin: bottom center;
 }
-
 .bottom-anchor-ad.is-collapsed .bottom-anchor-btn {
-  top: 14px;
+  top: 8px;
+  left: 8px;
+  transform: none;
 }
 
 /* Loading State */
@@ -139,8 +148,11 @@
   pointer-events: none;
 }
 
+.bottom-anchor-clearance.is-half-collapsed {
+  height: calc(132px + env(safe-area-inset-bottom, 0px));
+}
 .bottom-anchor-clearance.is-collapsed {
-  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  height: calc(48px + env(safe-area-inset-bottom, 0px));
 }
 
 .bottom-anchor-clearance.is-loading {
@@ -175,7 +187,8 @@
   }
 
   .bottom-anchor-ad.is-collapsed .bottom-anchor-btn {
-    top: 12px;
+    top: 10px;
+    left: 8px;
   }
 }
 

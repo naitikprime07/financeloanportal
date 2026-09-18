@@ -6,7 +6,7 @@ import CookieConsent from "../components/CookieConsent";
 import BottomAnchorAd from "../components/BottomAnchorAd";
 import DesktopSideAds from "../components/DesktopSideAds";
 import AdScriptLoader from "../components/AdScriptLoader";
-import AdUnit from "../components/AdUnit";
+import BlogTopAd from "../components/BlogTopAd";
 import BlogInterstitialGate from "../components/BlogInterstitialGate";
 import { BlogNavigationProvider } from "../hooks/useBlogNavigation";
 import "./Layout.css";
@@ -22,9 +22,7 @@ const Layout = () => {
       <BlogInterstitialGate />
       <Header />
       {location.pathname === "/" && (
-        <section className="header-ad-section" aria-label="Top advertisement">
-          <AdUnit key="home-header-blog-ad" slot="MIDDLE_1" size="blog-normal" className="blog-normal-ad" />
-        </section>
+        <BlogTopAd instanceKey="home-header-blog-ad" />
       )}
       <main className="main-content">
         <Outlet key={location.pathname} />
