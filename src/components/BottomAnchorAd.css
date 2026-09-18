@@ -114,15 +114,26 @@
   transform-origin: bottom center;
 }
 
-/* Minimum state is one row; the provider slot is scaled, never recreated. */
-.bottom-anchor-ad.is-collapsed .bottom-anchor-panel { height: 48px; }
+/* Collapsed state: compact bar with visible ad preview */
+.bottom-anchor-ad.is-collapsed .bottom-anchor-panel {
+  height: 68px;
+  border-radius: 8px 8px 0 0;
+}
+
 .bottom-anchor-ad.is-collapsed .bottom-anchor-creative {
-  right: 8px;
-  left: 48px;
-  width: auto;
-  height: 40px;
-  transform: scale(0.16);
-  transform-origin: bottom center;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bottom-anchor-ad.is-collapsed .bottom-anchor-slot {
+  transform: translateX(-50%) scale(0.18);
+  transform-origin: center center;
 }
 
 /* Loading State */
@@ -152,7 +163,7 @@
   height: calc(132px + env(safe-area-inset-bottom, 0px));
 }
 .bottom-anchor-clearance.is-collapsed {
-  height: calc(48px + env(safe-area-inset-bottom, 0px));
+  height: calc(68px + env(safe-area-inset-bottom, 0px));
 }
 
 .bottom-anchor-clearance.is-loading {
