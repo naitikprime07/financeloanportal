@@ -162,7 +162,7 @@ const BottomAnchorAd = () => {
     };
   }, []);
 
-  if (loadState === "unavailable" || anchorState === "dismissed") return null;
+  if (loadState === "unavailable") return null;
 
   const maxWidth = Math.max(1, availableWidth - 16);
   const scale = creativeSize ? Math.min(1, maxWidth / creativeSize[0]) : 1;
@@ -187,11 +187,6 @@ const BottomAnchorAd = () => {
     gamLog("bottom-anchor-expanded", { path: AD_PATH });
   };
 
-  const handleDismiss = () => {
-    setAnchorState("dismissed");
-    gamLog("bottom-anchor-dismissed", { path: AD_PATH });
-  };
-
   const isExpanded = anchorState === "expanded";
   const isCollapsed = anchorState === "collapsed";
 
@@ -204,47 +199,17 @@ const BottomAnchorAd = () => {
       >
         <div className="bottom-anchor-panel">
           {loadState === "filled" && (
-            <div className="bottom-anchor-controls">
-              {isExpanded && (
-                <>
-                  <button
-                    type="button"
-                    className="bottom-anchor-btn bottom-anchor-collapse"
-                    onClick={handleCollapse}
-                    aria-label="Collapse advertisement"
-                    title="Collapse ad"
-                  >
-                    <svg viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="m4 6 4 4 4-4" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    className="bottom-anchor-btn bottom-anchor-close"
-                    onClick={handleDismiss}
-                    aria-label="Close advertisement"
-                    title="Close ad"
-                  >
-                    <svg viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="m4 4 8 8 m0-8-8 8" />
-                    </svg>
-                  </button>
-                </>
-              )}
-              {isCollapsed && (
-                <button
-                  type="button"
-                  className="bottom-anchor-btn bottom-anchor-expand"
-                  onClick={handleExpand}
-                  aria-label="Expand advertisement"
-                  title="Expand ad"
-                >
-                  <svg viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="m4 10 4-4 4 4" />
-                  </svg>
-                </button>
-              )}
-            </div>
+            <button
+              type="button"
+              className={`bottom-anchor-btn ${isExpanded ? "bottom-anchor-collapse" : "bottom-anchor-expand"}`}
+              onClick={isExpanded ? handleCollapse : handleExpand}
+              aria-label={isExpanded ? "Collapse advertisement" : "Expand advertisement"}
+              title={isExpanded ? "Collapse ad" : "Expand ad"}
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d={isExpanded ? "m4 6 4 4 4-4" : "m4 10 4-4 4 4"} />
+              </svg>
+            </button>
           )}
           <div className="bottom-anchor-creative" aria-hidden={isCollapsed}>
             <div className="bottom-anchor-slot" id={id.current} />

@@ -25,20 +25,12 @@
   transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.bottom-anchor-controls {
+.bottom-anchor-btn {
   position: absolute;
   top: 8px;
-  right: 8px;
-  left: 8px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  height: 28px;
-}
-
-.bottom-anchor-btn {
   display: inline-flex;
   width: 32px;
   height: 32px;
@@ -120,7 +112,7 @@
   pointer-events: none;
 }
 
-.bottom-anchor-ad.is-collapsed .bottom-anchor-controls {
+.bottom-anchor-ad.is-collapsed .bottom-anchor-btn {
   top: 14px;
 }
 
@@ -136,7 +128,7 @@
   visibility: hidden;
 }
 
-.bottom-anchor-ad.is-loading .bottom-anchor-controls {
+.bottom-anchor-ad.is-loading .bottom-anchor-btn {
   display: none;
 }
 
@@ -155,10 +147,6 @@
   height: 18px;
 }
 
-.bottom-anchor-clearance.is-dismissed {
-  height: 0;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .bottom-anchor-ad {
@@ -175,13 +163,8 @@
     padding-inline: 4px;
   }
 
-  .bottom-anchor-controls {
-    top: 6px;
-    right: 6px;
-    left: 6px;
-  }
-
   .bottom-anchor-btn {
+    top: 6px;
     width: 28px;
     height: 28px;
   }
@@ -191,16 +174,12 @@
     height: 14px;
   }
 
-  .bottom-anchor-ad.is-collapsed .bottom-anchor-controls {
+  .bottom-anchor-ad.is-collapsed .bottom-anchor-btn {
     top: 12px;
   }
 }
 
 @media (max-width: 360px) {
-  .bottom-anchor-controls {
-    gap: 6px;
-  }
-
   .bottom-anchor-btn {
     width: 26px;
     height: 26px;
