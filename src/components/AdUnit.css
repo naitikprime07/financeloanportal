@@ -272,7 +272,7 @@
 }
 @media (max-width: 767px) {
     .blog-top-ad-frame {
-        width: min(300px, calc(100% - 24px));
+        width: min(300px, 100%);
         margin: 16px auto 22px;
     }
 }
