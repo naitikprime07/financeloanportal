@@ -278,3 +278,14 @@ body.gender-modal-open > div[id*="bottom-anchor"] {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* Hide all ads inside page content when gender modal is open */
+body.gender-modal-open #root .ad-unit-wrapper,
+body.gender-modal-open #root .ad-unit,
+body.gender-modal-open #root [id^="google_ads_iframe"],
+body.gender-modal-open #root [id^="div-gpt-ad"],
+body.gender-modal-open #root div[data-google-query-id] {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
