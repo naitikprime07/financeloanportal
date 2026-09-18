@@ -115,17 +115,22 @@ const useBlogNavigationController = () => {
           pendingRewardRequestRef.current = false;
           window.clearTimeout(pendingRequestTimeoutRef.current);
           pendingRequestTimeoutRef.current = null;
-          try {
-            setAdStatus('showing');
-            event.makeRewardedVisible();
-            gamLog('blog-nav-rewarded-shown-after-wait', { path: REWARDED_PATH });
-          } catch (error) {
-            setAdStatus('failed');
-            gamWarn('blog-nav-rewarded-show-failed', {
-              message: error instanceof Error ? error.message : String(error),
-            });
-            resolvePopupSession('rewarded-show-failed');
-          }
+          setIsGenderModalOpen(false);
+          setIsProcessing(false);
+          window.requestAnimationFrame(() => {
+            if (!active) return;
+            try {
+              setAdStatus('showing');
+              event.makeRewardedVisible();
+              gamLog('blog-nav-rewarded-shown-after-wait', { path: REWARDED_PATH });
+            } catch (error) {
+              setAdStatus('failed');
+              gamWarn('blog-nav-rewarded-show-failed', {
+                message: error instanceof Error ? error.message : String(error),
+              });
+              resolvePopupSession('rewarded-show-failed');
+            }
+          });
         }
       },
       rewardedSlotGranted: (event) => {
@@ -218,16 +223,20 @@ const useBlogNavigationController = () => {
     setIsProcessing(true);
     gamLog('blog-nav-gender-selected', { gender, blogSlug: pendingBlogSlugRef.current, hostname: currentHostnameRef.current });
     if (adStatus === 'ready' && showRewardedRef.current) {
-      try {
-        setAdStatus('showing');
-        showRewardedRef.current();
-        gamLog('blog-nav-rewarded-shown', { path: REWARDED_PATH, gender });
-      } catch (error) {
-        setAdStatus('failed');
-        gamWarn('blog-nav-rewarded-show-failed', { message: error instanceof Error ? error.message : String(error) });
-        resolvePopupSession('rewarded-show-failed');
-
-      }
+      const showRewarded = showRewardedRef.current;
+      setIsGenderModalOpen(false);
+      setIsProcessing(false);
+      window.requestAnimationFrame(() => {
+        try {
+          setAdStatus('showing');
+          showRewarded();
+          gamLog('blog-nav-rewarded-shown', { path: REWARDED_PATH, gender });
+        } catch (error) {
+          setAdStatus('failed');
+          gamWarn('blog-nav-rewarded-show-failed', { message: error instanceof Error ? error.message : String(error) });
+          resolvePopupSession('rewarded-show-failed');
+        }
+      });
     } else if (adStatus === 'idle' || adStatus === 'loading') {
       pendingRewardRequestRef.current = true;
       window.clearTimeout(pendingRequestTimeoutRef.current);

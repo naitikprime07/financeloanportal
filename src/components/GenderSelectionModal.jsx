@@ -15,6 +15,35 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
     const previousOverflow = document.body.style.overflow;
     document.body.classList.add("gender-modal-open");
     document.body.style.overflow = "hidden";
+
+    // Detect Google's body-level native anchor shell, which is outside React.
+    const markBottomAnchorShells = () => {
+      const viewportHeight = window.innerHeight;
+      document.querySelectorAll(
+        'iframe[id^="google_ads_iframe"], iframe[src*="doubleclick.net"], iframe[src*="googlesyndication.com"]',
+      ).forEach((frame) => {
+        let element = frame;
+        let anchorShell = null;
+        while (element && element !== document.body) {
+          const style = window.getComputedStyle(element);
+          const rect = element.getBoundingClientRect();
+          if (
+            (style.position === "fixed" || style.position === "sticky") &&
+            rect.width > 0 && rect.height > 0 &&
+            rect.height < viewportHeight * 0.9 &&
+            rect.bottom >= viewportHeight - 8
+          ) anchorShell = element;
+          element = element.parentElement;
+        }
+        anchorShell?.setAttribute(
+          "data-financeloanportal-bottom-anchor", "true",
+        );
+      });
+    };
+    markBottomAnchorShells();
+    const anchorFrame = window.requestAnimationFrame(markBottomAnchorShells);
+    const anchorObserver = new MutationObserver(markBottomAnchorShells);
+    anchorObserver.observe(document.body, { childList: true, subtree: true });
     const focusTimer = window.setTimeout(
       () => firstButtonRef.current?.focus(),
       100,
@@ -22,6 +51,8 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
 
     return () => {
       window.clearTimeout(focusTimer);
+      window.cancelAnimationFrame(anchorFrame);
+      anchorObserver.disconnect();
       document.body.classList.remove("gender-modal-open");
       document.body.style.overflow = previousOverflow;
     };
