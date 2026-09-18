@@ -126,7 +126,6 @@ div[data-google-query-id],
 #root [class*="google"],
 #root iframe[id*="google"] {
   z-index: var(--layer-ads, 100) !important;
-  max-z-index: var(--layer-ads, 100) !important;
 }
 
 .container {
@@ -241,77 +240,30 @@ div[data-google-query-id],
 }
 
 /* Z-index layering hierarchy */
-/* Gender modal root must be above all content including ads */
-#gender-modal-root,
 #gender-modal-root:not(:empty) {
-  z-index: var(--layer-modal) !important;
   position: fixed !important;
   inset: 0 !important;
-  pointer-events: auto !important;
+  z-index: var(--layer-modal) !important;
+  pointer-events: none;
 }
 
-/* GPT native bottom anchor must stay below modals */
-/* Target all possible GPT anchor container variations */
+/* GPT renders the native anchor outside React. Keep that live layer below the
+   portal backdrop instead of hiding, unmounting, or reloading it. */
+[data-financeloanportal-bottom-anchor="true"],
 .google-bottom-anchor-container,
 div[id^="google_bottom_anchor"],
 div[id*="bottom_anchor"],
 div[id*="bottom-anchor"],
-div[id*="anchor"],
 div[class*="google-bottom-anchor"],
 div[class*="bottom-anchor"],
 div[data-google-query-id][style*="fixed"][style*="bottom"],
-/* Catch any GPT-generated fixed bottom elements */
-div[id^="goog"][style*="position: fixed"][style*="bottom"],
-div[id^="google"][style*="position: fixed"][style*="bottom"] {
-  z-index: var(--layer-gam-anchor);
+body > div[style*="position: fixed"],
+body > div[style*="position:fixed"] {
+  z-index: var(--layer-gam-anchor) !important;
 }
 
-/* Ensure GPT anchor iframes also respect z-index */
-.google-bottom-anchor-container iframe,
-div[id^="google_bottom_anchor"] iframe,
-div[id*="bottom_anchor"] iframe,
-div[id*="bottom-anchor"] iframe,
-div[id*="anchor"] iframe,
-div[class*="google-bottom-anchor"] iframe,
-div[class*="bottom-anchor"] iframe {
-  z-index: 0;
-}
-
-/* Universal anchor ad suppression - ensure any bottom-fixed ad stays below modals */
-/* This catches GPT ads regardless of their dynamic naming */
-body>div[style*="position: fixed"][style*="bottom: 0"],
-body>div[style*="position:fixed"][style*="bottom:0"] {
-  z-index: var(--layer-gam-anchor);
-}
-
-
-/* Keep body-injected UI, including GAM's native anchor shell, completely
-   inactive while the body-level gender modal is open. #root remains visible
-   beneath the backdrop, and the modal portal remains the only active sibling. */
-body.gender-modal-open> :not(#root):not(#gender-modal-root) {
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* The native slot stays alive; only its rendered shell is suppressed while modal is open. */
-body.gender-modal-open [data-financeloanportal-modal-background="true"],
-body.gender-modal-open [data-financeloanportal-bottom-anchor="true"],
-body.gender-modal-open .google-bottom-anchor-container,
-body.gender-modal-open>div[id^="google_bottom_anchor"],
-body.gender-modal-open>div[id*="bottom_anchor"],
-body.gender-modal-open>div[id*="bottom-anchor"] {
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* Hide all ads inside page content when gender modal is open */
-body.gender-modal-open #root .ad-unit-wrapper,
-body.gender-modal-open #root .ad-unit,
-body.gender-modal-open #root [id^="google_ads_iframe"],
-body.gender-modal-open #root [id^="div-gpt-ad"],
-body.gender-modal-open #root div[data-google-query-id] {
-  visibility: hidden !important;
-  opacity: 0 !important;
+/* The backdrop receives all interaction. Page and GAM layers stay rendered
+   beneath it, so backdrop-filter dims/blurs the anchor with the page. */
+body.gender-modal-open > :not(#gender-modal-root) {
   pointer-events: none !important;
 }
