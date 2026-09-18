@@ -223,8 +223,21 @@ ul {
 
 /* Z-index layering hierarchy */
 /* GPT native bottom anchor must stay below modals */
+/* Target all possible GPT anchor container variations */
 .google-bottom-anchor-container,
-div[id^="google_bottom_anchor_"],
-div[class*="google-bottom-anchor"] {
+div[id^="google_bottom_anchor"],
+div[id*="bottom_anchor"],
+div[class*="google-bottom-anchor"],
+div[class*="bottom-anchor"],
+div[data-google-query-id][style*="fixed"][style*="bottom"] {
   z-index: 9000 !important;
+}
+
+/* Ensure GPT anchor iframes also respect z-index */
+.google-bottom-anchor-container iframe,
+div[id^="google_bottom_anchor"] iframe,
+div[id*="bottom_anchor"] iframe,
+div[class*="google-bottom-anchor"] iframe,
+div[class*="bottom-anchor"] iframe {
+  z-index: inherit !important;
 }
