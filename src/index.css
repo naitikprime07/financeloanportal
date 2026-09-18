@@ -260,6 +260,7 @@ body > div[style*="position:fixed"][style*="bottom:0"] {
 
 
 /* The native slot stays alive; only its rendered shell is suppressed while modal is open. */
+body.gender-modal-open [data-financeloanportal-modal-background="true"],
 body.gender-modal-open [data-financeloanportal-bottom-anchor="true"],
 body.gender-modal-open .google-bottom-anchor-container,
 body.gender-modal-open > div[id^="google_bottom_anchor"],

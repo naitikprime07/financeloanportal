@@ -16,34 +16,49 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
     document.body.classList.add("gender-modal-open");
     document.body.style.overflow = "hidden";
 
-    // Detect Google's body-level native anchor shell, which is outside React.
-    const markBottomAnchorShells = () => {
-      const viewportHeight = window.innerHeight;
-      document.querySelectorAll(
-        'iframe[id^="google_ads_iframe"], iframe[src*="doubleclick.net"], iframe[src*="googlesyndication.com"]',
-      ).forEach((frame) => {
+    // GAM injects the native anchor as a body-level sibling, outside React.
+    // Mark every external iframe/fixed layer so the global modal state can
+    // suppress it without unmounting or changing the underlying GPT slot.
+    const markExternalViewportLayers = () => {
+      const modalRoot = document.querySelector(".gender-modal-overlay");
+
+      Array.from(document.body.children).forEach((element) => {
+        if (element === modalRoot || element.id === "root") return;
+
+        const style = window.getComputedStyle(element);
+        const containsIframe =
+          element.tagName === "IFRAME" || Boolean(element.querySelector("iframe"));
+        const isViewportLayer =
+          style.position === "fixed" || style.position === "sticky";
+
+        if (containsIframe || isViewportLayer) {
+          element.setAttribute(
+            "data-financeloanportal-modal-background",
+            "true",
+          );
+        }
+      });
+
+      document.querySelectorAll("iframe").forEach((frame) => {
         let element = frame;
-        let anchorShell = null;
-        while (element && element !== document.body) {
-          const style = window.getComputedStyle(element);
-          const rect = element.getBoundingClientRect();
-          if (
-            (style.position === "fixed" || style.position === "sticky") &&
-            rect.width > 0 && rect.height > 0 &&
-            rect.height < viewportHeight * 0.9 &&
-            rect.bottom >= viewportHeight - 8
-          ) anchorShell = element;
+        while (element?.parentElement && element.parentElement !== document.body) {
           element = element.parentElement;
         }
-        anchorShell?.setAttribute(
-          "data-financeloanportal-bottom-anchor", "true",
-        );
+        if (element && element !== modalRoot && element.id !== "root") {
+          element.setAttribute(
+            "data-financeloanportal-modal-background",
+            "true",
+          );
+        }
       });
     };
-    markBottomAnchorShells();
-    const anchorFrame = window.requestAnimationFrame(markBottomAnchorShells);
-    const anchorObserver = new MutationObserver(markBottomAnchorShells);
-    anchorObserver.observe(document.body, { childList: true, subtree: true });
+
+    markExternalViewportLayers();
+    const layerFrame = window.requestAnimationFrame(markExternalViewportLayers);
+    const layerObserver = new MutationObserver(markExternalViewportLayers);
+    layerObserver.observe(document.body, { childList: true, subtree: true });
+    // GPT may apply fixed positioning after inserting its shell.
+    const layerScanTimer = window.setInterval(markExternalViewportLayers, 250);
     const focusTimer = window.setTimeout(
       () => firstButtonRef.current?.focus(),
       100,
@@ -51,8 +66,9 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
 
     return () => {
       window.clearTimeout(focusTimer);
-      window.cancelAnimationFrame(anchorFrame);
-      anchorObserver.disconnect();
+      window.cancelAnimationFrame(layerFrame);
+      layerObserver.disconnect();
+      window.clearInterval(layerScanTimer);
       document.body.classList.remove("gender-modal-open");
       document.body.style.overflow = previousOverflow;
     };
