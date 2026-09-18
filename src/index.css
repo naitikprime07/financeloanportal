@@ -259,6 +259,15 @@ body > div[style*="position:fixed"][style*="bottom:0"] {
 }
 
 
+/* Keep body-injected UI, including GAM's native anchor shell, completely
+   inactive while the body-level gender modal is open. #root remains visible
+   beneath the backdrop, and the modal portal remains the only active sibling. */
+body.gender-modal-open > :not(#root):not(.gender-modal-overlay) {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* The native slot stays alive; only its rendered shell is suppressed while modal is open. */
 body.gender-modal-open [data-financeloanportal-modal-background="true"],
 body.gender-modal-open [data-financeloanportal-bottom-anchor="true"],

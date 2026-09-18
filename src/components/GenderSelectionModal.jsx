@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useLayoutEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import "./GenderSelectionModal.css";
 
@@ -7,7 +7,7 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const firstButtonRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen) return undefined;
 
     setSelectedGender("male");
@@ -16,49 +16,6 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
     document.body.classList.add("gender-modal-open");
     document.body.style.overflow = "hidden";
 
-    // GAM injects the native anchor as a body-level sibling, outside React.
-    // Mark every external iframe/fixed layer so the global modal state can
-    // suppress it without unmounting or changing the underlying GPT slot.
-    const markExternalViewportLayers = () => {
-      const modalRoot = document.querySelector(".gender-modal-overlay");
-
-      Array.from(document.body.children).forEach((element) => {
-        if (element === modalRoot || element.id === "root") return;
-
-        const style = window.getComputedStyle(element);
-        const containsIframe =
-          element.tagName === "IFRAME" || Boolean(element.querySelector("iframe"));
-        const isViewportLayer =
-          style.position === "fixed" || style.position === "sticky";
-
-        if (containsIframe || isViewportLayer) {
-          element.setAttribute(
-            "data-financeloanportal-modal-background",
-            "true",
-          );
-        }
-      });
-
-      document.querySelectorAll("iframe").forEach((frame) => {
-        let element = frame;
-        while (element?.parentElement && element.parentElement !== document.body) {
-          element = element.parentElement;
-        }
-        if (element && element !== modalRoot && element.id !== "root") {
-          element.setAttribute(
-            "data-financeloanportal-modal-background",
-            "true",
-          );
-        }
-      });
-    };
-
-    markExternalViewportLayers();
-    const layerFrame = window.requestAnimationFrame(markExternalViewportLayers);
-    const layerObserver = new MutationObserver(markExternalViewportLayers);
-    layerObserver.observe(document.body, { childList: true, subtree: true });
-    // GPT may apply fixed positioning after inserting its shell.
-    const layerScanTimer = window.setInterval(markExternalViewportLayers, 250);
     const focusTimer = window.setTimeout(
       () => firstButtonRef.current?.focus(),
       100,
@@ -66,9 +23,6 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
 
     return () => {
       window.clearTimeout(focusTimer);
-      window.cancelAnimationFrame(layerFrame);
-      layerObserver.disconnect();
-      window.clearInterval(layerScanTimer);
       document.body.classList.remove("gender-modal-open");
       document.body.style.overflow = previousOverflow;
     };
