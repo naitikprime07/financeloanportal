@@ -34,7 +34,8 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
     onContinue(selectedGender);
   };
 
-  if (!isOpen) return null;
+  const modalRoot = document.getElementById("gender-modal-root");
+  if (!isOpen || !modalRoot) return null;
 
   return createPortal(
     <div
@@ -116,7 +117,7 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
         )}
       </div>
     </div>,
-    document.body,
+    modalRoot,
   );
 };
 
