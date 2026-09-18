@@ -17,6 +17,7 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+  --layer-ads: 100;
   --layer-gam-anchor: 9000;
   --layer-modal: 2147483647;
 }
@@ -110,6 +111,22 @@ button {
 
 ul {
   list-style: none;
+}
+
+/* Constrain all ads z-index to stay below modal backdrop */
+.ad-unit-wrapper,
+.ad-unit,
+.ad-unit > div,
+.ad-unit iframe,
+div[id^="google_ads_iframe"],
+div[id^="div-gpt-ad"],
+div[data-google-query-id],
+#root [id*="google"],
+#root [id*="gpt"],
+#root [class*="google"],
+#root iframe[id*="google"] {
+  z-index: var(--layer-ads, 100) !important;
+  max-z-index: var(--layer-ads, 100) !important;
 }
 
 .container {
