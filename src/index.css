@@ -17,6 +17,8 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+  --layer-gam-anchor: 9000;
+  --layer-modal: 2147483647;
 }
 
 body {
@@ -235,8 +237,7 @@ div[data-google-query-id][style*="fixed"][style*="bottom"],
 /* Catch any GPT-generated fixed bottom elements */
 div[id^="goog"][style*="position: fixed"][style*="bottom"],
 div[id^="google"][style*="position: fixed"][style*="bottom"] {
-  z-index: 9000 !important;
-  max-z-index: 9000 !important;
+  z-index: var(--layer-gam-anchor) !important;
 }
 
 /* Ensure GPT anchor iframes also respect z-index */
@@ -248,12 +249,22 @@ div[id*="anchor"] iframe,
 div[class*="google-bottom-anchor"] iframe,
 div[class*="bottom-anchor"] iframe {
   z-index: inherit !important;
-  max-z-index: 9000 !important;
 }
 
 /* Universal anchor ad suppression - ensure any bottom-fixed ad stays below modals */
 /* This catches GPT ads regardless of their dynamic naming */
 body > div[style*="position: fixed"][style*="bottom: 0"],
 body > div[style*="position:fixed"][style*="bottom:0"] {
-  z-index: 9000 !important;
+  z-index: var(--layer-gam-anchor) !important;
+}
+
+
+/* The native slot stays alive; only its rendered shell is suppressed while modal is open. */
+body.gender-modal-open [data-financeloanportal-bottom-anchor="true"],
+body.gender-modal-open .google-bottom-anchor-container,
+body.gender-modal-open > div[id^="google_bottom_anchor"],
+body.gender-modal-open > div[id*="bottom_anchor"],
+body.gender-modal-open > div[id*="bottom-anchor"] {
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

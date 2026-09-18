@@ -20,7 +20,13 @@
 .main-content-area {
     min-width: 0;
     width: 100%;
-    overflow-x: hidden;
+}
+
+/* Ad containers on home page need proper overflow handling */
+.main-content-area .ad-unit-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
 }
 
 .blog-grid {

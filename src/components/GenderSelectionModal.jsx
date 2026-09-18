@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import "./GenderSelectionModal.css";
 
 const GenderSelectionModal = ({ isOpen, onContinue }) => {
@@ -7,13 +8,12 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
   const firstButtonRef = useRef(null);
 
   useEffect(() => {
-    if (!isOpen) {
-      document.body.style.overflow = "";
-      return undefined;
-    }
+    if (!isOpen) return undefined;
 
     setSelectedGender("male");
     setIsProcessing(false);
+    const previousOverflow = document.body.style.overflow;
+    document.body.classList.add("gender-modal-open");
     document.body.style.overflow = "hidden";
     const focusTimer = window.setTimeout(
       () => firstButtonRef.current?.focus(),
@@ -22,7 +22,8 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
 
     return () => {
       window.clearTimeout(focusTimer);
-      document.body.style.overflow = "";
+      document.body.classList.remove("gender-modal-open");
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 
@@ -34,7 +35,7 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       className="gender-modal-overlay"
       role="dialog"
@@ -113,7 +114,8 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

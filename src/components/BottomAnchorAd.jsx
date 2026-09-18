@@ -48,6 +48,19 @@ const BottomAnchorAd = () => {
 
         slot.addService(gt.pubads());
         window.__financeloanportalBottomAnchorSlot = slot;
+        const markAnchorShell = (event) => {
+          if (event.slot !== slot) return;
+          const slotElement = document.getElementById(slot.getSlotElementId());
+          let shell = slotElement;
+          while (shell?.parentElement && shell.parentElement !== document.body) {
+            const position = window.getComputedStyle(shell).position;
+            if (position === "fixed" || position === "sticky") break;
+            shell = shell.parentElement;
+          }
+          shell?.setAttribute("data-financeloanportal-bottom-anchor", "true");
+        };
+        gt.pubads().addEventListener("slotRenderEnded", markAnchorShell);
+        window.__financeloanportalBottomAnchorRenderHandler = markAnchorShell;
         gamLog("bottom-anchor-defined", {
           path: AD_PATH,
           format: "BOTTOM_ANCHOR",
