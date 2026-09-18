@@ -75,7 +75,8 @@
     position: relative;
     width: min(300px, 100%);
     max-width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     box-sizing: border-box;
     margin-left: auto;
     margin-right: auto;
@@ -208,12 +209,15 @@
 .blog-ad-frame--poster,
 .blog-ad-frame--middle {
     position: relative;
-    display: flow-root;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     clear: both;
     width: 100%;
     max-width: 100%;
-    height: auto;
-    overflow: hidden;
+    min-height: 250px;
+    overflow-x: hidden;
+    overflow-y: visible;
     box-sizing: border-box;
     margin-left: auto;
     margin-right: auto;
@@ -229,8 +233,8 @@
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    height: auto;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     box-sizing: border-box;
 }
 
@@ -240,9 +244,7 @@
 .blog-ad-frame--poster .ad-unit iframe,
 .blog-ad-frame--middle .ad-unit > div,
 .blog-ad-frame--middle .ad-unit iframe {
-    width: 100% !important;
     max-width: 100% !important;
-    height: auto !important;
     box-sizing: border-box;
     display: block;
     margin: 0 auto;
