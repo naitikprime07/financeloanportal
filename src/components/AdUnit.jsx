@@ -18,7 +18,6 @@ const PATHS = {
   BLOG_FEATURED: normalizePath(import.meta.env.VITE_GAM_AD_UNIT_CONTENT_MIDDLE_2),
   MIDDLE_3: normalizePath(import.meta.env.VITE_GAM_AD_UNIT_CONTENT_MIDDLE_3),
   BOTTOM: normalizePath(import.meta.env.VITE_GAM_AD_UNIT_CONTENT_BOTTOM),
-  ANCHOR: normalizePath(import.meta.env.VITE_GAM_AD_UNIT_MOBILE_ANCHOR),
   NATIVE: normalizePath(import.meta.env.VITE_GAM_AD_UNIT_NATIVE_IN_CONTENT),
   SIDE_LEFT: normalizePath(import.meta.env.VITE_GAM_AD_UNIT_DESKTOP_SIDE_LEFT),
   SIDE_RIGHT: normalizePath(
@@ -63,10 +62,6 @@ const SIZES = {
   ],
   MIDDLE_3: [[728, 90], [336, 280], [300, 250], [320, 100], [320, 50], "fluid"],
   NATIVE: ["fluid", [336, 280], [300, 250]],
-  ANCHOR: [
-    [320, 100],
-    [320, 50],
-  ],
   SIDE_LEFT: [
     [160, 600],
     [120, 600],
@@ -130,8 +125,6 @@ const buildMapping = (gt, key, blogNormal = false, horizontal = false, available
       .build();
   if (key === "BLOG_SIDEBAR")
     return gt.sizeMapping().addSize([0, 0], SIZES.BLOG_SIDEBAR).build();
-  if (key === "ANCHOR")
-    return gt.sizeMapping().addSize([0, 0], SIZES.ANCHOR).build();
   if (key.startsWith("SIDE_"))
     return gt
       .sizeMapping()
