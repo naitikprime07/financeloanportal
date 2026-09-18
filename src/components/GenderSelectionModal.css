@@ -5,24 +5,33 @@
   pointer-events: none;
 }
 
-.gender-modal-overlay {
-  position: fixed;
-  inset: 0;
+.gender-modal-dialog {
   width: 100vw;
+  max-width: none;
   height: 100vh;
   height: 100dvh;
-  box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.75);
+  max-height: none;
+  margin: auto;
+  padding: 20px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow-y: auto;
+  pointer-events: auto;
+}
+
+.gender-modal-dialog[open] {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: inherit;
-  padding: 20px;
   animation: fadeIn 0.2s ease-out;
+}
+
+.gender-modal-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  overflow-y: auto;
-  pointer-events: auto;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
@@ -268,7 +277,7 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .gender-modal-overlay,
+  .gender-modal-dialog,
   .gender-modal-content,
   .gender-option,
   .gender-continue-btn {

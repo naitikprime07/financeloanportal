@@ -6,15 +6,23 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
   const [selectedGender, setSelectedGender] = useState("male");
   const [isProcessing, setIsProcessing] = useState(false);
   const firstButtonRef = useRef(null);
+  const dialogRef = useRef(null);
 
   useLayoutEffect(() => {
     if (!isOpen) return undefined;
 
     setSelectedGender("male");
     setIsProcessing(false);
+    const dialog = dialogRef.current;
+    if (!dialog) return undefined;
+
     const previousOverflow = document.body.style.overflow;
     document.body.classList.add("gender-modal-open");
     document.body.style.overflow = "hidden";
+
+    if (!dialog.open) {
+      dialog.showModal();
+    }
 
     const focusTimer = window.setTimeout(
       () => firstButtonRef.current?.focus(),
@@ -23,6 +31,7 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
 
     return () => {
       window.clearTimeout(focusTimer);
+      if (dialog.open) dialog.close();
       document.body.classList.remove("gender-modal-open");
       document.body.style.overflow = previousOverflow;
     };
@@ -38,11 +47,11 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
   if (!isOpen || !modalRoot) return null;
 
   return createPortal(
-    <div
-      className="gender-modal-overlay"
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
+      className="gender-modal-dialog"
       aria-labelledby="gender-modal-title"
+      onCancel={(event) => event.preventDefault()}
     >
       <div className="gender-modal-content" role="document">
         <h2 id="gender-modal-title" className="gender-modal-title">
@@ -116,7 +125,7 @@ const GenderSelectionModal = ({ isOpen, onContinue }) => {
           </div>
         )}
       </div>
-    </div>,
+    </dialog>,
     modalRoot,
   );
 };
