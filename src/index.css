@@ -227,17 +227,33 @@ ul {
 .google-bottom-anchor-container,
 div[id^="google_bottom_anchor"],
 div[id*="bottom_anchor"],
+div[id*="bottom-anchor"],
+div[id*="anchor"],
 div[class*="google-bottom-anchor"],
 div[class*="bottom-anchor"],
-div[data-google-query-id][style*="fixed"][style*="bottom"] {
+div[data-google-query-id][style*="fixed"][style*="bottom"],
+/* Catch any GPT-generated fixed bottom elements */
+div[id^="goog"][style*="position: fixed"][style*="bottom"],
+div[id^="google"][style*="position: fixed"][style*="bottom"] {
   z-index: 9000 !important;
+  max-z-index: 9000 !important;
 }
 
 /* Ensure GPT anchor iframes also respect z-index */
 .google-bottom-anchor-container iframe,
 div[id^="google_bottom_anchor"] iframe,
 div[id*="bottom_anchor"] iframe,
+div[id*="bottom-anchor"] iframe,
+div[id*="anchor"] iframe,
 div[class*="google-bottom-anchor"] iframe,
 div[class*="bottom-anchor"] iframe {
   z-index: inherit !important;
+  max-z-index: 9000 !important;
+}
+
+/* Universal anchor ad suppression - ensure any bottom-fixed ad stays below modals */
+/* This catches GPT ads regardless of their dynamic naming */
+body > div[style*="position: fixed"][style*="bottom: 0"],
+body > div[style*="position:fixed"][style*="bottom:0"] {
+  z-index: 9000 !important;
 }
