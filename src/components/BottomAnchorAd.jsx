@@ -181,23 +181,30 @@ const BottomAnchorAd = () => {
   const handleToggle = () => {
     setAnchorState((current) => {
       let next;
-      if (current === "expanded") {
-        transitionDirectionRef.current = "collapsing";
-        next = "half-collapsed";
-      } else if (current === "collapsed") {
-        transitionDirectionRef.current = "expanding";
-        next = "half-collapsed";
-      } else {
-        next = transitionDirectionRef.current === "collapsing" ? "collapsed" : "expanded";
+      switch (current) {
+        case "expanded":
+          next = "collapsed";
+          break;
+        case "collapsed":
+          next = "minimized";
+          break;
+        case "minimized":
+          next = "collapsed";
+          break;
+        default:
+          next = "expanded";
       }
       gamLog("bottom-anchor-state-changed", { path: AD_PATH, from: current, to: next });
       return next;
     });
   };
 
-  const isCollapsing =
-    anchorState === "expanded" ||
-    (anchorState === "half-collapsed" && transitionDirectionRef.current === "collapsing");
+  const getIcon = () => {
+    if (anchorState === "expanded") {
+      return "m4 6 4 4 4-4";
+    }
+    return "m4 10 4-4 4 4";
+  };
 
   return (
     <>
@@ -212,12 +219,11 @@ const BottomAnchorAd = () => {
               type="button"
               className="bottom-anchor-btn"
               onClick={handleToggle}
-              aria-label={isCollapsing ? "Collapse advertisement" : "Expand advertisement"}
+              aria-label={anchorState === "expanded" ? "Collapse advertisement" : "Expand advertisement"}
               aria-expanded={anchorState === "expanded"}
-              title={isCollapsing ? "Collapse ad" : "Expand ad"}
             >
               <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d={isCollapsing ? "m4 6 4 4 4-4" : "m4 10 4-4 4 4"} />
+                <path d={getIcon()} />
               </svg>
             </button>
           )}
