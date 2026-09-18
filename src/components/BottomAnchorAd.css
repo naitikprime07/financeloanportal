@@ -27,20 +27,20 @@
 
 .bottom-anchor-btn {
   position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 8px;
+  transform: translateY(-50%);
   z-index: 3;
   display: inline-flex;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 28px;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(209, 216, 226, 0.9);
-  border-radius: 50%;
+  border-radius: 5px 5px 3px 3px;
   background: #fff;
   color: #536174;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 -2px 7px rgba(15, 23, 42, 0.1);
   font: inherit;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -48,13 +48,18 @@
 
 .bottom-anchor-btn:hover {
   background: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
-  transform: translate(-50%, -1px);
+  box-shadow: 0 -3px 9px rgba(15, 23, 42, 0.15);
+  transform: translateY(calc(-50% - 1px));
 }
 
 .bottom-anchor-btn:active {
-  transform: translate(-50%, 0);
+  transform: translateY(-50%);
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
+}
+
+.bottom-anchor-btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 .bottom-anchor-btn svg {
@@ -119,11 +124,6 @@
   transform: scale(0.16);
   transform-origin: bottom center;
 }
-.bottom-anchor-ad.is-collapsed .bottom-anchor-btn {
-  top: 8px;
-  left: 8px;
-  transform: none;
-}
 
 /* Loading State */
 .bottom-anchor-ad.is-loading .bottom-anchor-panel {
@@ -175,29 +175,14 @@
     padding-inline: 4px;
   }
 
-  .bottom-anchor-btn {
-    top: 6px;
-    width: 28px;
-    height: 28px;
-  }
-
   .bottom-anchor-btn svg {
     width: 14px;
     height: 14px;
   }
 
-  .bottom-anchor-ad.is-collapsed .bottom-anchor-btn {
-    top: 10px;
-    left: 8px;
-  }
 }
 
 @media (max-width: 360px) {
-  .bottom-anchor-btn {
-    width: 26px;
-    height: 26px;
-  }
-
   .bottom-anchor-btn svg {
     width: 12px;
     height: 12px;
