@@ -14,7 +14,9 @@
       "Bash(git add src/components/BlogCard.jsx src/components/BlogSidebar.jsx src/layouts/Layout.jsx src/layouts/Layout.css src/pages/BlogDetail.jsx src/pages/Category.jsx src/pages/Home.jsx src/components/GenderSelectionModal.jsx src/components/GenderSelectionModal.css src/hooks/)",
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd interstitial ads, gender modal, and enhanced blog navigation\n\nFeatures added:\n- Interstitial ads on blog navigation (BlogInterstitialGate)\n- Gender selection modal for subdomain first-time users\n- Rewarded ad flow for subdomains with completion tracking\n- Moved top ad below header as centered square box\n- Enhanced blog navigation with useBlogNavigation hook\n\nModified files:\n- Blog navigation components (BlogCard, BlogSidebar, Home, Category, BlogDetail)\n- Layout with interstitial gate and new header ad position\n- Added GenderSelectionModal component with styling\n- Added useBlogNavigation hook for navigation logic\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(cat \"d:/financeloanportal/src/hooks/useBlogNavigation.js\")",
-      "Bash(cat \"d:/financeloanportal/src/layouts/Layout.css\")"
+      "Bash(cat \"d:/financeloanportal/src/layouts/Layout.css\")",
+      "Bash(test -f .env)",
+      "Bash(cat .env)"
     ],
     "deny": [],
     "ask": []

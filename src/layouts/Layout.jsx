@@ -23,9 +23,7 @@ const Layout = () => {
       <Header />
       {location.pathname === "/" && (
         <section className="header-ad-section" aria-label="Top advertisement">
-          <div className="container">
-            <AdUnit key="home-header-square" slot="MIDDLE_1" size="square" />
-          </div>
+          <AdUnit key="home-header-blog-ad" slot="MIDDLE_1" size="blog-normal" className="blog-normal-ad" />
         </section>
       )}
       <main className="main-content">

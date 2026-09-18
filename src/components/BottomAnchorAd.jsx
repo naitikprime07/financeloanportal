@@ -42,8 +42,7 @@ const BottomAnchorAd = () => {
   const slotRef = useRef(null);
   const measureFrameRef = useRef(0);
   const [loadState, setLoadState] = useState("loading");
-  const [displayState, setDisplayState] = useState("expanded");
-  const [transitionDirection, setTransitionDirection] = useState("collapsing");
+  const [anchorState, setAnchorState] = useState("expanded");
   const [creativeSize, setCreativeSize] = useState(null);
   const [availableWidth, setAvailableWidth] = useState(viewportWidth);
 
@@ -97,8 +96,7 @@ const BottomAnchorAd = () => {
           : null,
       );
       setLoadState("filled");
-      setDisplayState("expanded");
-      setTransitionDirection("collapsing");
+      setAnchorState("expanded");
       measureCreative();
       gamLog("bottom-anchor-rendered", { path: AD_PATH, size: event.size });
     };
@@ -109,6 +107,11 @@ const BottomAnchorAd = () => {
       gamLog("bottom-anchor-iframe-loaded", { path: AD_PATH });
     };
 
+    const onRequested = (event) => {
+      if (!active || !owns(event)) return;
+      gamLog("bottom-anchor-requested", { path: AD_PATH });
+    };
+
     window.googletag.cmd.push(() => {
       if (!active) return;
       const gt = window.googletag;
@@ -116,12 +119,20 @@ const BottomAnchorAd = () => {
         const slot = gt.defineSlot(AD_PATH, AD_SIZES, id.current);
         if (!slot) {
           setLoadState("unavailable");
+          gamWarn("bottom-anchor-define-failed", { path: AD_PATH });
           return;
         }
         slot.defineSizeMapping(buildSizeMapping(gt)).addService(gt.pubads());
         slotRef.current = slot;
+        gt.pubads().addEventListener("slotRequested", onRequested);
         gt.pubads().addEventListener("slotRenderEnded", onRender);
         gt.pubads().addEventListener("slotOnload", onLoad);
+        gamLog("bottom-anchor-defined", {
+          path: AD_PATH,
+          id: id.current,
+          apiReady: Boolean(gt.apiReady),
+          pubadsReady: Boolean(gt.pubadsReady),
+        });
         gt.display(id.current);
         timeoutId = window.setTimeout(() => {
           if (!active) return;
@@ -143,6 +154,7 @@ const BottomAnchorAd = () => {
       const slot = slotRef.current;
       slotRef.current = null;
       window.googletag?.cmd?.push(() => {
+        window.googletag.pubads().removeEventListener("slotRequested", onRequested);
         window.googletag.pubads().removeEventListener("slotRenderEnded", onRender);
         window.googletag.pubads().removeEventListener("slotOnload", onLoad);
         if (slot) window.googletag.destroySlots([slot]);
@@ -150,80 +162,97 @@ const BottomAnchorAd = () => {
     };
   }, []);
 
-  if (loadState === "unavailable") return null;
+  if (loadState === "unavailable" || anchorState === "dismissed") return null;
 
   const maxWidth = Math.max(1, availableWidth - 16);
   const scale = creativeSize ? Math.min(1, maxWidth / creativeSize[0]) : 1;
   const renderedWidth = creativeSize ? creativeSize[0] * scale : Math.min(320, maxWidth);
   const renderedHeight = creativeSize ? creativeSize[1] * scale : 50;
-  const compactScale = scale * 0.5;
-  const compactWidth = Math.min(renderedWidth, Math.max(180, renderedWidth * 0.5));
-  const compactHeight = renderedHeight * 0.5;
+
   const style = {
     "--anchor-width": `${renderedWidth}px`,
     "--anchor-height": `${renderedHeight}px`,
     "--anchor-creative-width": `${creativeSize?.[0] || renderedWidth}px`,
     "--anchor-creative-height": `${creativeSize?.[1] || renderedHeight}px`,
     "--anchor-scale": scale,
-    "--anchor-compact-width": `${compactWidth}px`,
-    "--anchor-compact-height": `${compactHeight}px`,
-    "--anchor-compact-scale": compactScale,
   };
 
-  const toggleAnchor = () => {
-    if (displayState === "expanded") {
-      setTransitionDirection("collapsing");
-      setDisplayState("compact");
-      return;
-    }
-
-    if (displayState === "minimized") {
-      setTransitionDirection("expanding");
-      setDisplayState("compact");
-      return;
-    }
-
-    setDisplayState(transitionDirection === "collapsing" ? "minimized" : "expanded");
+  const handleCollapse = () => {
+    setAnchorState("collapsed");
+    gamLog("bottom-anchor-collapsed", { path: AD_PATH });
   };
 
-  const isExpanded = displayState === "expanded";
-  const isMinimized = displayState === "minimized";
-  const nextActionExpands = isMinimized || transitionDirection === "expanding";
-  const toggleLabel = isExpanded
-    ? "Half size"
-    : nextActionExpands
-      ? "Expand ad"
-      : "Minimize ad";
+  const handleExpand = () => {
+    setAnchorState("expanded");
+    gamLog("bottom-anchor-expanded", { path: AD_PATH });
+  };
+
+  const handleDismiss = () => {
+    setAnchorState("dismissed");
+    gamLog("bottom-anchor-dismissed", { path: AD_PATH });
+  };
+
+  const isExpanded = anchorState === "expanded";
+  const isCollapsed = anchorState === "collapsed";
 
   return (
     <>
       <aside
-        className={`bottom-anchor-ad is-${displayState} is-${loadState}`}
+        className={`bottom-anchor-ad is-${anchorState} is-${loadState}`}
         style={style}
         aria-label="Advertisement"
       >
         <div className="bottom-anchor-panel">
-          <div className="bottom-anchor-creative" aria-hidden={isMinimized}>
+          {loadState === "filled" && (
+            <div className="bottom-anchor-controls">
+              {isExpanded && (
+                <>
+                  <button
+                    type="button"
+                    className="bottom-anchor-btn bottom-anchor-collapse"
+                    onClick={handleCollapse}
+                    aria-label="Collapse advertisement"
+                    title="Collapse ad"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="m4 6 4 4 4-4" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="bottom-anchor-btn bottom-anchor-close"
+                    onClick={handleDismiss}
+                    aria-label="Close advertisement"
+                    title="Close ad"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="m4 4 8 8 m0-8-8 8" />
+                    </svg>
+                  </button>
+                </>
+              )}
+              {isCollapsed && (
+                <button
+                  type="button"
+                  className="bottom-anchor-btn bottom-anchor-expand"
+                  onClick={handleExpand}
+                  aria-label="Expand advertisement"
+                  title="Expand ad"
+                >
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="m4 10 4-4 4 4" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          )}
+          <div className="bottom-anchor-creative" aria-hidden={isCollapsed}>
             <div className="bottom-anchor-slot" id={id.current} />
           </div>
-          {loadState === "filled" && (
-            <button
-              type="button"
-              className="bottom-anchor-toggle"
-              onClick={toggleAnchor}
-              aria-expanded={isExpanded}
-              aria-label={nextActionExpands ? "Expand advertisement" : "Minimize advertisement"}
-            >
-              <span>{toggleLabel}</span>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d={nextActionExpands ? "m4 10 4-4 4 4" : "m4 6 4 4 4-4"} />
-              </svg>
-            </button>
-          )}
         </div>
       </aside>
       <div
-        className={`bottom-anchor-clearance is-${displayState} is-${loadState}`}
+        className={`bottom-anchor-clearance is-${anchorState} is-${loadState}`}
         style={style}
         aria-hidden="true"
       />
