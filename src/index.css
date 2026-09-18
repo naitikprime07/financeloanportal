@@ -18,7 +18,7 @@
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
   --layer-ads: 100;
-  --layer-gam-anchor: 9000;
+  --layer-gam-anchor: 500;
   --layer-modal: 2147483647;
 }
 
@@ -241,6 +241,12 @@ div[data-google-query-id],
 }
 
 /* Z-index layering hierarchy */
+/* Gender modal root must be above all content including ads */
+#gender-modal-root {
+  z-index: var(--layer-modal) !important;
+  position: relative;
+}
+
 /* GPT native bottom anchor must stay below modals */
 /* Target all possible GPT anchor container variations */
 .google-bottom-anchor-container,
