@@ -220,3 +220,11 @@ ul {
     margin-top: 4px;
   }
 }
+
+/* Z-index layering hierarchy */
+/* GPT native bottom anchor must stay below modals */
+.google-bottom-anchor-container,
+div[id^="google_bottom_anchor_"],
+div[class*="google-bottom-anchor"] {
+  z-index: 9000 !important;
+}
