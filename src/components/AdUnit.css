@@ -240,12 +240,12 @@
 }
 
 
-/* One shared, uncropped vertical placement for Blog Detail and Home. */
+/* Shared responsive placement for Blog Detail and Home. */
 .blog-top-ad-frame {
     width: min(300px, 100%);
     max-width: 100%;
     margin: 24px auto;
-    overflow: visible !important;
+    overflow: visible;
     box-sizing: border-box;
 }
 .blog-top-ad-frame .ad-unit-wrapper,
@@ -254,14 +254,25 @@
     max-width: 100%;
     min-width: 0;
     height: auto;
-    overflow: visible !important;
+    overflow: visible;
     box-sizing: border-box;
+}
+.blog-top-ad-frame .blog-normal-ad.is-filled,
+.blog-top-ad-frame .blog-normal-ad.is-filled .ad-unit {
+    width: min(100%, var(--ad-rendered-width));
+    min-height: var(--ad-rendered-height);
 }
 .blog-top-ad-frame .ad-unit > div,
 .blog-top-ad-frame .ad-unit iframe {
-    max-width: 100% !important;
+    width: var(--ad-rendered-width) !important;
+    height: var(--ad-rendered-height) !important;
+    max-width: none !important;
+    max-height: none !important;
     box-sizing: border-box;
 }
 @media (max-width: 767px) {
-    .blog-top-ad-frame { margin: 20px auto; }
+    .blog-top-ad-frame {
+        width: min(300px, calc(100% - 24px));
+        margin: 16px auto 22px;
+    }
 }

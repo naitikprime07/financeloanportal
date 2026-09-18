@@ -80,8 +80,13 @@ const BLOG_HORIZONTAL_SIZES = [[728, 90], [468, 60], [320, 100], [320, 50]];
 const BLOG_POSTER_SIZES = [[300, 250], [250, 250]];
 const SQUARE_SIZES = [[250, 250], [200, 200]];
 
-const getBlogNormalSizes = (availableWidth) =>
-  availableWidth >= 300 ? BLOG_NORMAL_SIZES : [];
+const getBlogNormalSizes = (availableWidth) => {
+  if (availableWidth < 300) return [];
+  if (typeof window !== "undefined" && window.innerWidth < 768) {
+    return [[300, 250]];
+  }
+  return BLOG_NORMAL_SIZES;
+};
 
 const getBlogHorizontalSizes = (availableWidth) => {
   if (availableWidth >= 728) return [[728, 90]];
